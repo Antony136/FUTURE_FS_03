@@ -13,6 +13,7 @@ const menuRoutes = require('./routes/menu');
 const reservationRoutes = require('./routes/reservations');
 const contactRoutes = require('./routes/contact');
 const authRoutes = require('./routes/auth');
+const adminRoutes = require('./routes/admin');
 
 // Import DB config
 const connectDB = require('./config/db');
@@ -38,6 +39,7 @@ app.use('/api/menu', menuRoutes);
 app.use('/api/reservations', reservationRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
 
 // ─── Health Check ─────────────────────────────────────────────────────────────
 app.get('/', (req, res) => {

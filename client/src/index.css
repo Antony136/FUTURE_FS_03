@@ -9,22 +9,22 @@
   /* ── Color Palette ─────────────────────────────────────────────────────── */
 
   /* Background */
-  --color-bg-base:     #0f0d0a;
-  --color-bg-surface:  #1a1710;
-  --color-bg-card:     #211e15;
-  --color-bg-elevated: #2a2619;
+  --color-bg-base:     #050505;
+  --color-bg-surface:  #0d0d0d;
+  --color-bg-card:     #141414;
+  --color-bg-elevated: #1c1c1c;
 
   /* Gold Accent */
-  --color-gold-50:  #fdf9ec;
-  --color-gold-100: #f9eecc;
-  --color-gold-200: #f2d98a;
-  --color-gold-300: #e9c04c;
-  --color-gold-400: #d9a72b;
-  --color-gold-500: #c49020;
-  --color-gold-600: #a3731a;
-  --color-gold-700: #7d5614;
-  --color-gold-800: #5a3c0e;
-  --color-gold-900: #3b2508;
+  --color-gold-50:  #fffcf2;
+  --color-gold-100: #fff5cc;
+  --color-gold-200: #ffeb99;
+  --color-gold-300: #ffd666;
+  --color-gold-400: #ffc233;
+  --color-gold-500: #d4a017;
+  --color-gold-600: #b08512;
+  --color-gold-700: #8c6a0e;
+  --color-gold-800: #684f0a;
+  --color-gold-900: #443407;
 
   /* Warm Neutrals */
   --color-warm-50:  #faf8f4;
@@ -39,11 +39,11 @@
   --color-warm-900: #221b11;
 
   /* Semantic */
-  --color-text-primary:   #f5f0e8;
-  --color-text-secondary: #b8a37e;
-  --color-text-muted:     #6e5f47;
-  --color-border:         #2e2a1e;
-  --color-border-gold:    rgba(196, 144, 32, 0.3);
+  --color-text-primary:   #ffffff;
+  --color-text-secondary: #d4d4d4;
+  --color-text-muted:     #888888;
+  --color-border:         #262626;
+  --color-border-gold:    #d4a0174d; 
 
   /* Status */
   --color-success: #4ade80;
@@ -456,9 +456,84 @@ a:hover { color: var(--color-gold-300); }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-img { display: block; max-width: 100%; }
+/* ── Utility Classes ───────────────────────────────────────────────────────── */
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.grid-cols-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+
+/* ── Admin Specific Styles ─────────────────────────────────────────────── */
+.admin-table-container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-card);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+}
+
+.admin-table th {
+  background: var(--color-bg-elevated);
+  padding: 1rem 1.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-table td {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.9375rem;
+  vertical-align: middle;
+}
+
+.admin-table tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* ── Modal Overlay ────────────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.modal-content {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-gold);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-gold-lg);
+}
+
+/* ── Responsive Overrides ────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .section { padding: 4rem 0; }
+  .modal-content { padding: 1.5rem; }
+  .admin-table-container { border-radius: 0; border-inline: none; }
+}
+
+img { display: block; max-width: 100%; height: auto; }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(0.6) sepia(0.5) saturate(2) hue-rotate(5deg);
+  filter: invert(1) brightness(0.7);
   cursor: pointer;
 }

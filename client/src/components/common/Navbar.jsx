@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Menu, X, ChefHat, Phone } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
   { to: '/',            label: 'Home'         },
@@ -36,46 +38,46 @@ const Navbar = () => {
         zIndex: 100,
         transition: 'all 300ms cubic-bezier(0.4,0,0.2,1)',
         ...(scrolled ? {
-          background: 'rgba(15, 13, 10, 0.92)',
+          background: 'rgba(5, 5, 5, 0.9)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(196, 144, 32, 0.15)',
-          boxShadow: '0 4px 32px rgba(0,0,0,0.4)',
+          borderBottom: '1px solid var(--color-border)',
+          boxShadow: '0 4px 32px rgba(0,0,0,0.5)',
         } : {
           background: 'transparent',
           borderBottom: '1px solid transparent',
         }),
       }}
     >
-      <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '72px' }}>
+      <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '80px' }}>
 
         {/* ── Logo ─────────────────────────────────────────────── */}
         <Link
           to="/"
           id="navbar-logo"
-          style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', textDecoration: 'none' }}
+          style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}
         >
           <div style={{
-            width: '38px', height: '38px',
+            width: '42px', height: '42px',
             background: 'linear-gradient(135deg, var(--color-gold-500), var(--color-gold-300))',
-            borderRadius: '10px',
+            borderRadius: '12px',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             boxShadow: 'var(--shadow-gold-sm)',
           }}>
-            <ChefHat size={20} color="#0f0d0a" strokeWidth={2.2} />
+            <ChefHat size={22} color="#000" strokeWidth={2.5} />
           </div>
           <div>
-            <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.15rem', lineHeight: 1, color: 'var(--color-text-primary)', letterSpacing: '-0.03em' }}>
+            <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.25rem', lineHeight: 1, color: 'var(--color-text-primary)', letterSpacing: '-0.03em' }}>
               Savory Skies
             </div>
-            <div style={{ fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--color-gold-500)', lineHeight: 1, marginTop: '2px' }}>
+            <div style={{ fontSize: '0.65rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--color-gold-500)', fontWeight: 700, lineHeight: 1, marginTop: '4px' }}>
               Fine Dining
             </div>
           </div>
         </Link>
 
         {/* ── Desktop Nav ──────────────────────────────────────── */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }} className="desktop-nav">
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }} className="desktop-nav">
           {navLinks.map(({ to, label }) => (
             <NavLink
               key={to}
@@ -83,16 +85,21 @@ const Navbar = () => {
               end={to === '/'}
               id={`nav-${label.toLowerCase()}`}
               style={({ isActive }) => ({
-                padding: '0.4rem 0.875rem',
+                padding: '0.5rem 1rem',
                 borderRadius: 'var(--radius-md)',
-                fontFamily: 'var(--font-body)',
+                fontFamily: 'var(--font-heading)',
                 fontSize: '0.9rem',
-                fontWeight: 500,
+                fontWeight: 600,
                 textDecoration: 'none',
-                transition: 'all 150ms ease',
-                color: isActive ? 'var(--color-gold-300)' : 'var(--color-text-secondary)',
-                background: isActive ? 'rgba(196,144,32,0.08)' : 'transparent',
+                transition: 'all 200ms ease',
+                color: isActive ? 'var(--color-gold-400)' : 'var(--color-text-secondary)',
+                letterSpacing: '0.02em',
               })}
+              onMouseEnter={e => e.target.style.color = 'var(--color-gold-300)'}
+              onMouseLeave={e => {
+                const isActive = e.target.classList.contains('active');
+                e.target.style.color = isActive ? 'var(--color-gold-400)' : 'var(--color-text-secondary)';
+              }}
             >
               {label}
             </NavLink>
@@ -100,69 +107,85 @@ const Navbar = () => {
         </nav>
 
         {/* ── CTA ──────────────────────────────────────────────── */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
           <a
             href="tel:+1234567890"
             id="navbar-phone"
-            style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', color: 'var(--color-text-muted)', fontSize: '0.8rem', textDecoration: 'none', transition: 'color 150ms ease' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-text-secondary)', fontSize: '0.85rem', fontWeight: 600, textDecoration: 'none', transition: 'color 150ms ease' }}
             className="hidden-mobile"
           >
-            <Phone size={14} />
+            <Phone size={15} className="text-gradient" />
             <span>+1 (234) 567-890</span>
           </a>
-          <Link to="/reservations" id="navbar-reserve-btn" className="btn btn-primary btn-sm hidden-mobile">
-            Reserve Table
+          <Link to="/reservations" id="navbar-reserve-btn" className="btn btn-primary btn-sm hidden-mobile" style={{ padding: '0.6rem 1.5rem' }}>
+            Book a Table
           </Link>
 
           {/* Mobile hamburger */}
           <button
             id="navbar-menu-toggle"
             onClick={() => setIsOpen(p => !p)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-primary)', padding: '0.25rem', display: 'none' }}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-primary)', padding: '0.5rem', display: 'none' }}
             aria-label="Toggle menu"
             className="mobile-only"
           >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
+            {isOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
       </div>
 
       {/* ── Mobile Menu ──────────────────────────────────────────────────── */}
-      {isOpen && (
-        <div
-          id="mobile-menu"
-          style={{
-            background: 'rgba(15, 13, 10, 0.97)',
-            backdropFilter: 'blur(20px)',
-            borderTop: '1px solid var(--color-border)',
-            padding: '1rem 1.5rem 1.5rem',
-          }}
-        >
-          {navLinks.map(({ to, label }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={to === '/'}
-              id={`mobile-nav-${label.toLowerCase()}`}
-              style={({ isActive }) => ({
-                display: 'block',
-                padding: '0.75rem 0',
-                borderBottom: '1px solid var(--color-border)',
-                fontFamily: 'var(--font-body)',
-                fontSize: '1rem',
-                fontWeight: 500,
-                textDecoration: 'none',
-                color: isActive ? 'var(--color-gold-300)' : 'var(--color-text-secondary)',
-              })}
-            >
-              {label}
-            </NavLink>
-          ))}
-          <Link to="/reservations" id="mobile-reserve-btn" className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }}>
-            Reserve a Table
-          </Link>
-        </div>
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            id="mobile-menu"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            style={{
+              position: 'absolute',
+              top: '100%',
+              left: 0,
+              right: 0,
+              background: 'var(--color-bg-surface)',
+              borderBottom: '1px solid var(--color-border)',
+              padding: '1.5rem 2rem 2.5rem',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
+            }}
+          >
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {navLinks.map(({ to, label }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  end={to === '/'}
+                  id={`mobile-nav-${label.toLowerCase()}`}
+                  style={({ isActive }) => ({
+                    display: 'block',
+                    padding: '1rem 0',
+                    borderBottom: '1px solid var(--color-border)',
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: '1.1rem',
+                    fontWeight: 600,
+                    textDecoration: 'none',
+                    color: isActive ? 'var(--color-gold-400)' : 'var(--color-text-primary)',
+                  })}
+                >
+                  {label}
+                </NavLink>
+              ))}
+              <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <Link to="/reservations" className="btn btn-primary" style={{ width: '100%' }}>
+                  Make a Reservation
+                </Link>
+                <a href="tel:+1234567890" className="btn btn-ghost" style={{ width: '100%' }}>
+                  Call Us
+                </a>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Responsive styles injected via style tag */}
       <style>{`

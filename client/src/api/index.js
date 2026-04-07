@@ -24,6 +24,10 @@ export const contactAPI = {
   delete: (id) => api.delete(`/contact/${id}`),
 };
 
+export const adminAPI = {
+  getStats: () => api.get('/admin/stats'),
+};
+
 export const authAPI = {
   login: (data) => api.post('/auth/login', data),
   register: (data) => api.post('/auth/register', data),

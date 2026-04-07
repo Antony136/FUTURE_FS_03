@@ -17,6 +17,9 @@ import NotFound      from './pages/NotFound';
 // Admin Pages
 import AdminLogin     from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import MenuManagement  from './pages/admin/MenuManagement';
+import ReservationTracker from './pages/admin/ReservationTracker';
+import InquiryInbox    from './pages/admin/InquiryInbox';
 
 function App() {
   return (
@@ -44,6 +47,30 @@ function App() {
             element={
               <ProtectedRoute>
                 <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/menu"
+            element={
+              <ProtectedRoute>
+                <MenuManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/reservations"
+            element={
+              <ProtectedRoute>
+                <ReservationTracker />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/inquiries"
+            element={
+              <ProtectedRoute>
+                <InquiryInbox />
               </ProtectedRoute>
             }
           />

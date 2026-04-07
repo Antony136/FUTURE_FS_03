@@ -1,14 +1,10 @@
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, UtensilsCrossed, CalendarCheck, MessageSquare, LogOut, ChefHat, TrendingUp, Users, Clock } from 'lucide-react';
+import { LayoutDashboard, UtensilsCrossed, CalendarCheck, MessageSquare, LogOut, ChefHat, TrendingUp, Users, Clock, ExternalLink } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { adminAPI } from '../../api';
 import usePageTitle from '../../hooks/usePageTitle';
-
-const statCards = [
-  { icon: UtensilsCrossed, label: 'Menu Items',    value: '—', color: 'var(--color-gold-400)'  },
-  { icon: CalendarCheck,   label: 'Reservations',  value: '—', color: '#60a5fa'                },
-  { icon: MessageSquare,   label: 'Inquiries',     value: '—', color: '#a78bfa'                },
-  { icon: Users,           label: 'Guests Today',  value: '—', color: 'var(--color-success)'   },
-];
+import toast from 'react-hot-toast';
 
 const quickLinks = [
   { to: '/admin/menu',         icon: UtensilsCrossed, label: 'Manage Menu',         desc: 'Add, edit or remove dishes' },
@@ -17,11 +13,43 @@ const quickLinks = [
 ];
 
 const AdminDashboard = () => {
-  usePageTitle('Admin Dashboard');
+  usePageTitle('Dashboard');
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  const [stats, setStats] = useState({
+    menuItems: 0,
+    reservations: 0,
+    inquiries: 0,
+    guestsToday: 0
+  });
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setLoading(true);
+        const res = await adminAPI.getStats();
+        setStats(res.data.data);
+      } catch (err) {
+        console.error('Stats fetch error:', err);
+        toast.error('Failed to update dashboard stats.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
+
   const handleLogout = () => { logout(); navigate('/admin/login'); };
+
+  const statCards = [
+    { icon: UtensilsCrossed, label: 'Menu Items',    value: stats.menuItems,    color: 'var(--color-gold-400)'  },
+    { icon: CalendarCheck,   label: 'Reservations',  value: stats.reservations, color: '#60a5fa'                },
+    { icon: MessageSquare,   label: 'Inquiries',     value: stats.inquiries,    color: '#a78bfa'                },
+    { icon: Users,           label: 'Guests Today',  value: stats.guestsToday,  color: 'var(--color-success)'   },
+  ];
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-bg-base)' }}>
@@ -44,9 +72,9 @@ const AdminDashboard = () => {
         </Link>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <a href="/" target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', textDecoration: 'none' }}>
-            View Site ↗
-          </a>
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: 'var(--color-text-muted)', textDecoration: 'none' }}>
+            View Site <ExternalLink size={12} />
+          </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--color-gold-600), var(--color-gold-800))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-gold-200)' }}>
               {user?.name?.[0]?.toUpperCase() || 'A'}
@@ -90,7 +118,9 @@ const AdminDashboard = () => {
                 <Icon size={20} style={{ color }} />
               </div>
               <div>
-                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 700, lineHeight: 1, color: 'var(--color-text-primary)' }}>{value}</div>
+                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 700, lineHeight: 1, color: loading ? 'var(--color-text-muted)' : 'var(--color-text-primary)', transition: 'color 300ms ease' }}>
+                  {loading ? '...' : value}
+                </div>
                 <div style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', marginTop: '2px' }}>{label}</div>
               </div>
             </div>
@@ -98,7 +128,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Quick Links */}
-        <h2 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '1rem', letterSpacing: '0.05em', textTransform: 'uppercase', fontSize: '0.8rem' }}>
+        <h2 style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '1rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
           Quick Actions
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
@@ -122,13 +152,27 @@ const AdminDashboard = () => {
           ))}
         </div>
 
-        {/* Coming Soon Note */}
-        <div style={{ marginTop: '2.5rem', padding: '1rem 1.25rem', background: 'rgba(196,144,32,0.05)', border: '1px dashed var(--color-border-gold)', borderRadius: 'var(--radius-md)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <TrendingUp size={15} style={{ color: 'var(--color-gold-500)' }} />
-            <span style={{ fontSize: '0.8rem', color: 'var(--color-gold-400)', fontWeight: 600 }}>
-              Full analytics, live stats, and CRUD panels coming in Phase 5
-            </span>
+        {/* Live Overview */}
+        <div style={{ marginTop: '2.5rem', padding: '1.5rem', background: 'var(--color-bg-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-xl)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
+            <TrendingUp size={20} style={{ color: 'var(--color-gold-500)' }} />
+            <h3 style={{ fontSize: '1rem', color: 'var(--color-text-primary)' }}>Performance at a Glance</h3>
+          </div>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
+            <div>
+              <div style={{ color: 'var(--color-text-muted)', fontSize: '0.8rem', marginBottom: '0.5rem' }}>System Status</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--color-success)', boxShadow: '0 0 8px var(--color-success)' }} />
+                <span style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)' }}>All Systems Operational</span>
+              </div>
+            </div>
+            <div>
+              <div style={{ color: 'var(--color-text-muted)', fontSize: '0.8rem', marginBottom: '0.5rem' }}>Active Session</div>
+              <div style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Clock size={14} /> {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} — Admin Active
+              </div>
+            </div>
           </div>
         </div>
       </main>
