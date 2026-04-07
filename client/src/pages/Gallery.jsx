@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-presence';
+import { motion, AnimatePresence } from 'framer-motion';
 import { X, ZoomIn, Camera, Star, Sparkles, LayoutGrid } from 'lucide-react';
 import usePageTitle from '../hooks/usePageTitle';
 

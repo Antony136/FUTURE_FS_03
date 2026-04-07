@@ -1,5 +1,21 @@
 import { Link } from 'react-router-dom';
-import { ChefHat, MapPin, Phone, Mail, Clock, Instagram, Facebook, Twitter, ArrowUp } from 'lucide-react';
+import { ChefHat, MapPin, Phone, Mail, Clock, ArrowUp } from 'lucide-react';
+
+const InstagramIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+  </svg>
+);
+const FacebookIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+  </svg>
+);
+const TwitterIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>
+  </svg>
+);
 
 const footerLinks = {
   explore: [
@@ -24,9 +40,9 @@ const SocialBtn = ({ href, icon: Icon, label }) => (
     rel="noopener noreferrer"
     aria-label={label}
     className="footer-icon"
-    style={{ color: 'var(--color-text-secondary)', textDecoration: 'none' }}
+    style={{ color: 'var(--color-text-secondary)', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
   >
-    <Icon size={18} />
+    <Icon />
   </a>
 );
 
@@ -42,7 +58,6 @@ const Footer = () => {
         position: 'relative'
       }}
     >
-      {/* Scroll to Top Circle */}
       <button 
         onClick={scrollToTop}
         style={{
@@ -63,7 +78,6 @@ const Footer = () => {
           marginBottom: '5rem',
         }}>
 
-          {/* ── Brand ───────────────────────────────────────────────── */}
           <div>
             <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', marginBottom: '1.5rem' }}>
               <div style={{
@@ -82,13 +96,12 @@ const Footer = () => {
               Excellence in every bite. Experience the finest selection of globally-inspired dishes in the heart of Manhattan.
             </p>
             <div style={{ display: 'flex', gap: '1rem' }}>
-              <SocialBtn href="#" icon={Instagram} label="Instagram" />
-              <SocialBtn href="#" icon={Facebook} label="Facebook" />
-              <SocialBtn href="#" icon={Twitter} label="Twitter" />
+              <SocialBtn href="#" icon={InstagramIcon} label="Instagram" />
+              <SocialBtn href="#" icon={FacebookIcon} label="Facebook" />
+              <SocialBtn href="#" icon={TwitterIcon} label="Twitter" />
             </div>
           </div>
 
-          {/* ── Quick Links ─────────────────────────────────────────── */}
           <div>
             <h4 style={{ fontSize: '0.8rem', fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--color-primary)', marginBottom: '1.5rem' }}>
               Explore
@@ -108,7 +121,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* ── Timings ─────────────────────────────────────────────── */}
           <div>
             <h4 style={{ fontSize: '0.8rem', fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--color-primary)', marginBottom: '1.5rem' }}>
               Timings
@@ -123,7 +135,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* ── Location ─────────────────────────────────────────────── */}
           <div>
             <h4 style={{ fontSize: '0.8rem', fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--color-primary)', marginBottom: '1.5rem' }}>
               Concierge
@@ -143,7 +154,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* ── Bottom Bar ─────────────────────────────────────────────── */}
         <div style={{
           borderTop: '1px solid var(--color-border)',
           paddingTop: '2.5rem',

@@ -1,19 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, UtensilsCrossed, CalendarCheck, MessageSquare, LogOut, ChefHat, TrendingUp, Users, Clock, ExternalLink } from 'lucide-react';
+import { LayoutDashboard, UtensilsCrossed, CalendarCheck, MessageSquare, LogOut, ChefHat, TrendingUp, Users, Clock, ExternalLink, Sparkles, ShieldCheck } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { adminAPI } from '../../api';
 import usePageTitle from '../../hooks/usePageTitle';
 import toast from 'react-hot-toast';
 
-const quickLinks = [
-  { to: '/admin/menu',         icon: UtensilsCrossed, label: 'Manage Menu',         desc: 'Add, edit or remove dishes' },
-  { to: '/admin/reservations', icon: CalendarCheck,   label: 'Reservations',        desc: 'View and update bookings'   },
-  { to: '/admin/inquiries',    icon: MessageSquare,   label: 'Inquiries Inbox',     desc: 'Read contact messages'      },
-];
-
 const AdminDashboard = () => {
-  usePageTitle('Dashboard');
+  usePageTitle('Admin Dashboard');
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -33,7 +28,6 @@ const AdminDashboard = () => {
         const res = await adminAPI.getStats();
         setStats(res.data.data);
       } catch (err) {
-        console.error('Stats fetch error:', err);
         toast.error('Failed to update dashboard stats.');
       } finally {
         setLoading(false);
@@ -45,137 +39,152 @@ const AdminDashboard = () => {
   const handleLogout = () => { logout(); navigate('/admin/login'); };
 
   const statCards = [
-    { icon: UtensilsCrossed, label: 'Menu Items',    value: stats.menuItems,    color: 'var(--color-gold-400)'  },
-    { icon: CalendarCheck,   label: 'Reservations',  value: stats.reservations, color: '#60a5fa'                },
-    { icon: MessageSquare,   label: 'Inquiries',     value: stats.inquiries,    color: '#a78bfa'                },
-    { icon: Users,           label: 'Guests Today',  value: stats.guestsToday,  color: 'var(--color-success)'   },
+    { icon: UtensilsCrossed, label: 'Menu Items',    value: stats.menuItems,    color: 'var(--color-primary)'  },
+    { icon: CalendarCheck,   label: 'Reservations',  value: stats.reservations, color: '#2563eb'                },
+    { icon: MessageSquare,   label: 'Inquiries',     value: stats.inquiries,    color: '#7c3aed'                },
+    { icon: Users,           label: 'Guests Today',  value: stats.guestsToday,  color: '#059669'                },
   ];
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg-base)' }}>
-      {/* ── Topbar ──────────────────────────────────────────────────────── */}
-      <header style={{
-        background: 'var(--color-bg-surface)',
-        borderBottom: '1px solid var(--color-border)',
-        padding: '0 2rem',
-        height: '64px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        position: 'sticky', top: 0, zIndex: 50,
+    <div style={{ minHeight: '100vh', background: 'var(--color-bg-base)', paddingBottom: '5rem' }}>
+      
+      {/* ── Top Navigation ────────────────────────────────────────────── */}
+      <header className="glass" style={{
+        height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '0 3rem', borderBottom: '1px solid var(--color-border)',
+        position: 'sticky', top: 0, zIndex: 100
       }}>
-        <Link to="/admin" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
-          <div style={{ width: '32px', height: '32px', background: 'linear-gradient(135deg, var(--color-gold-500), var(--color-gold-300))', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ChefHat size={16} color="#0f0d0a" strokeWidth={2.2} />
+        <Link to="/admin" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
+          <div style={{ width: '40px', height: '40px', background: 'var(--color-primary)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <ChefHat size={20} color="white" />
           </div>
-          <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '1rem', color: 'var(--color-text-primary)' }}>
-            Savory Skies <span style={{ color: 'var(--color-gold-500)', fontWeight: 400, fontSize: '0.8rem' }}>Admin</span>
+          <span className="font-display" style={{ fontWeight: 800, fontSize: '1.25rem', color: 'var(--color-text-primary)' }}>
+            Savory <span className="text-gradient">Skies</span> <span style={{ fontSize: '0.75rem', opacity: 0.6, fontWeight: 400 }}>Admin Portal</span>
           </span>
         </Link>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: 'var(--color-text-muted)', textDecoration: 'none' }}>
-            View Site <ExternalLink size={12} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+          <Link to="/" className="btn btn-ghost btn-sm" style={{ gap: '0.5rem', color: 'var(--color-text-muted)' }}>
+            <ExternalLink size={14} /> View Site
           </Link>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--color-gold-600), var(--color-gold-800))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-gold-200)' }}>
-              {user?.name?.[0]?.toUpperCase() || 'A'}
+          <div style={{ height: '24px', width: '1px', background: 'var(--color-border)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: '0.9rem', fontWeight: 700 }}>{user?.name || 'Administrator'}</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--color-primary)', fontWeight: 600 }}>Elite Access</div>
             </div>
-            <span style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>{user?.name || 'Admin'}</span>
+            <button onClick={handleLogout} className="footer-icon" style={{ padding: '0.5rem', borderRadius: '50%' }}>
+              <LogOut size={18} />
+            </button>
           </div>
-          <button
-            id="admin-logout-btn"
-            onClick={handleLogout}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', background: 'none', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: '0.375rem 0.75rem', color: 'var(--color-text-muted)', fontSize: '0.8rem', cursor: 'pointer', transition: 'all 150ms ease' }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-error)'; e.currentTarget.style.color = 'var(--color-error)'; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; e.currentTarget.style.color = 'var(--color-text-muted)'; }}
-          >
-            <LogOut size={13} /> Logout
-          </button>
         </div>
       </header>
 
-      {/* ── Content ─────────────────────────────────────────────────────── */}
-      <main style={{ padding: '2.5rem 2rem', maxWidth: '1100px', margin: '0 auto' }}>
-
-        {/* Welcome */}
-        <div style={{ marginBottom: '2.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-            <LayoutDashboard size={18} style={{ color: 'var(--color-gold-400)' }} />
-            <span style={{ fontSize: '0.8rem', color: 'var(--color-gold-400)', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Dashboard</span>
-          </div>
-          <h1 style={{ fontSize: '1.75rem', marginBottom: '0.25rem' }}>
-            Good {new Date().getHours() < 12 ? 'Morning' : new Date().getHours() < 17 ? 'Afternoon' : 'Evening'}, {user?.name?.split(' ')[0] || 'Admin'} 👋
-          </h1>
-          <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>
-            Here's what's happening at Savory Skies today.
-          </p>
+      {/* ── Dashboard Content ──────────────────────────────────────────── */}
+      <main className="container" style={{ paddingTop: '4rem', maxWidth: '1200px' }}>
+        
+        <div style={{ marginBottom: '4rem' }}>
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="section-label">
+             <ShieldCheck size={14} style={{ marginRight: '6px' }} /> Secure Administrative Overview
+          </motion.div>
+          <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="font-display">
+             System <span className="text-gradient">Intelligence</span>
+          </motion.h1>
+          <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} style={{ color: 'var(--color-text-muted)', fontSize: '1.1rem', marginTop: '1rem' }}>
+             Welcome back. Here is a real-time summary of your restaurant's performance and operations.
+          </motion.p>
         </div>
 
-        {/* Stat Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem', marginBottom: '2.5rem' }}>
-          {statCards.map(({ icon: Icon, label, value, color }) => (
-            <div key={label} className="card" style={{ padding: '1.5rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <div style={{ width: '44px', height: '44px', borderRadius: 'var(--radius-md)', background: `${color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Icon size={20} style={{ color }} />
+        {/* Statistic Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '2rem', marginBottom: '4rem' }}>
+          {statCards.map((card, i) => (
+            <motion.div 
+               key={card.label} 
+               initial={{ opacity: 0, y: 20 }} 
+               animate={{ opacity: 1, y: 0 }} 
+               transition={{ delay: i * 0.1 }}
+               className="card" 
+               style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem', position: 'relative', overflow: 'hidden' }}
+            >
+              <div style={{ width: '50px', height: '50px', borderRadius: '12px', background: `${card.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <card.icon size={24} style={{ color: card.color }} />
               </div>
               <div>
-                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 700, lineHeight: 1, color: loading ? 'var(--color-text-muted)' : 'var(--color-text-primary)', transition: 'color 300ms ease' }}>
-                  {loading ? '...' : value}
-                </div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', marginTop: '2px' }}>{label}</div>
+                 <div style={{ fontSize: '2.5rem', fontWeight: 800, lineHeight: 1, marginBottom: '0.5rem' }}>
+                    {loading ? '...' : card.value}
+                 </div>
+                 <div style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    {card.label}
+                 </div>
               </div>
-            </div>
+              <Sparkles size={60} style={{ position: 'absolute', bottom: '-15px', right: '-15px', opacity: 0.05, color: card.color }} />
+            </motion.div>
           ))}
         </div>
 
-        {/* Quick Links */}
-        <h2 style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '1rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-          Quick Actions
-        </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
-          {quickLinks.map(({ to, icon: Icon, label, desc }) => (
-            <Link
-              key={to}
-              to={to}
-              id={`admin-link-${label.toLowerCase().replace(/\s+/g, '-')}`}
-              style={{ textDecoration: 'none' }}
-            >
-              <div className="card" style={{ padding: '1.5rem', display: 'flex', gap: '1rem', alignItems: 'flex-start', cursor: 'pointer' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: 'var(--radius-md)', background: 'rgba(196,144,32,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Icon size={18} style={{ color: 'var(--color-gold-400)' }} />
-                </div>
-                <div>
-                  <div style={{ fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '0.2rem', fontFamily: 'var(--font-body)' }}>{label}</div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>{desc}</div>
-                </div>
-              </div>
-            </Link>
-          ))}
+        {/* Quick Actions */}
+        <div style={{ marginBottom: '4rem' }}>
+           <h3 className="font-display" style={{ marginBottom: '2rem', fontSize: '1.5rem' }}>Management Modules</h3>
+           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
+              {[
+                { to: '/admin/menu', icon: UtensilsCrossed, title: 'Culinary Collection', desc: 'Refine and update your signature dishes.' },
+                { to: '/admin/reservations', icon: CalendarCheck, title: 'Booking Ledger', desc: 'Oversee and coordinate guest arrivals.' },
+                { to: '/admin/inquiries', icon: MessageSquare, title: 'Concierge Inbox', desc: 'Respond to guest requests and inquiries.' },
+              ].map((link, i) => (
+                <Link key={i} to={link.to} style={{ textDecoration: 'none' }}>
+                   <motion.div 
+                      whileHover={{ y: -5 }} 
+                      className="card glass" 
+                      style={{ padding: '2rem', display: 'flex', gap: '1.5rem', alignItems: 'center', border: '1px solid var(--color-border)' }}
+                    >
+                      <div style={{ padding: '1rem', background: 'var(--color-bg-base)', borderRadius: '12px', border: '1px solid var(--color-border)' }}>
+                         <link.icon size={20} color="var(--color-primary)" />
+                      </div>
+                      <div>
+                         <div style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '0.25rem' }}>{link.title}</div>
+                         <div style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>{link.desc}</div>
+                      </div>
+                   </motion.div>
+                </Link>
+              ))}
+           </div>
         </div>
 
-        {/* Live Overview */}
-        <div style={{ marginTop: '2.5rem', padding: '1.5rem', background: 'var(--color-bg-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-xl)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
-            <TrendingUp size={20} style={{ color: 'var(--color-gold-500)' }} />
-            <h3 style={{ fontSize: '1rem', color: 'var(--color-text-primary)' }}>Performance at a Glance</h3>
-          </div>
-          
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
-            <div>
-              <div style={{ color: 'var(--color-text-muted)', fontSize: '0.8rem', marginBottom: '0.5rem' }}>System Status</div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--color-success)', boxShadow: '0 0 8px var(--color-success)' }} />
-                <span style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)' }}>All Systems Operational</span>
+        {/* System Health */}
+        <div className="glass" style={{ padding: '2.5rem', borderRadius: 'var(--radius-xl)', border: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '3rem' }}>
+           <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+              <div style={{ position: 'relative' }}>
+                 <div style={{ width: '12px', height: '12px', background: '#059669', borderRadius: '50%' }} />
+                 <div style={{ position: 'absolute', inset: 0, background: '#059669', borderRadius: '50%', opacity: 0.4, animation: 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite' }} />
               </div>
-            </div>
-            <div>
-              <div style={{ color: 'var(--color-text-muted)', fontSize: '0.8rem', marginBottom: '0.5rem' }}>Active Session</div>
-              <div style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Clock size={14} /> {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} — Admin Active
+              <div>
+                 <div style={{ fontSize: '1rem', fontWeight: 700 }}>Critical Systems Operational</div>
+                 <div style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>MERN stack cluster is performing at peak efficiency.</div>
               </div>
-            </div>
-          </div>
+           </div>
+           
+           <div style={{ display: 'flex', gap: '2.5rem' }}>
+              <div style={{ textAlign: 'right' }}>
+                 <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase' }}>Server Pulse</div>
+                 <div style={{ fontSize: '1rem', fontWeight: 700 }}>24ms Latency</div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                 <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase' }}>Security</div>
+                 <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--color-primary)' }}>JWT Encrypted</div>
+              </div>
+           </div>
         </div>
+
       </main>
+
+      <style>{`
+        @keyframes ping {
+          75%, 100% {
+            transform: scale(2.5);
+            opacity: 0;
+          }
+        }
+      `}</style>
     </div>
   );
 };
