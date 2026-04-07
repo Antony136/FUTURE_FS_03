@@ -309,7 +309,7 @@ const Home = () => {
         <div 
           style={{ 
             position: 'absolute', inset: 0, 
-            backgroundImage: 'url("https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600&h=600&fit=crop")',
+            backgroundImage: 'url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600&h=600&fit=crop")',
             backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.1
           }} 
         />

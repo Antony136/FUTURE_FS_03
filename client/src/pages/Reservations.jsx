@@ -90,7 +90,7 @@ const Reservations = () => {
           </div>
           <div style={{ position: 'relative' }}>
              <div style={{ position: 'absolute', inset: '-1.5rem', border: '2px solid var(--color-border-gold)', borderRadius: 'var(--radius-xl)', zIndex: 0 }} />
-             <img src="https://images.unsplash.com/photo-1550966842-8877144e597d?w=800&h=600&fit=crop" alt="Experience" style={{ width: '100%', borderRadius: 'var(--radius-xl)', position: 'relative', zIndex: 1 }} />
+             <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1000&auto=format&fit=crop" alt="Experience" style={{ width: '100%', borderRadius: 'var(--radius-xl)', position: 'relative', zIndex: 1 }} />
           </div>
         </div>
 
@@ -101,7 +101,14 @@ const Reservations = () => {
           className="glass" 
           style={{ padding: '4.5rem', borderRadius: 'var(--radius-2xl)', border: '1px solid var(--color-border)' }}
         >
-          <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2.5rem' }}>
+          <form 
+            onSubmit={handleSubmit} 
+            style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', 
+              gap: '2.5rem' 
+            }}
+          >
             
             <div className="form-group">
               <label className="form-label"><User size={14} style={{ marginRight: '8px' }} /> Full Name</label>
@@ -142,7 +149,7 @@ const Reservations = () => {
             </div>
 
             <div style={{ gridColumn: '1 / -1', marginTop: '2rem', textAlign: 'center' }}>
-              <button type="submit" disabled={submitting} className="btn btn-primary btn-lg" style={{ width: '100%', maxWidth: '400px', borderRadius: '4px' }}>
+              <button type="submit" disabled={submitting} className="btn btn-primary btn-lg" style={{ width: '100%', maxWidth: '100%', borderRadius: '4px' }}>
                 {submitting ? 'Confirming Selection...' : 'Secure My Table'}
               </button>
               <p style={{ marginTop: '1.5rem', fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>

@@ -55,8 +55,9 @@ const Contact = () => {
       </section>
 
       {/* ── Contact Section ─────────────────────────────────────────────── */}
-      <section className="section">
-        <div className="container">
+      <section className="section" style={{ position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url("https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=1600&auto=format&fit=crop")', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.05 }} />
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '6rem' }}>
             
             {/* Info Column */}
@@ -117,7 +118,14 @@ const Contact = () => {
                 ) : (
                   <>
                     <h3 className="font-display" style={{ marginBottom: '2.5rem', fontSize: '2rem' }}>Send Us a <span className="text-gradient">Message</span></h3>
-                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                    <form 
+                      onSubmit={handleSubmit} 
+                      style={{ 
+                        display: 'grid', 
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+                        gap: '2rem' 
+                      }}
+                    >
                       <div className="form-group">
                         <label className="form-label">Full Name</label>
                         <input 
@@ -140,7 +148,7 @@ const Contact = () => {
                           onChange={e => setFormData({ ...formData, email: e.target.value })}
                         />
                       </div>
-                      <div className="form-group">
+                      <div className="form-group" style={{ gridColumn: '1 / -1' }}>
                         <label className="form-label">Purpose of Inquiry</label>
                         <select 
                           className="form-select"
@@ -153,7 +161,7 @@ const Contact = () => {
                           <option>Media Inquiry</option>
                         </select>
                       </div>
-                      <div className="form-group">
+                      <div className="form-group" style={{ gridColumn: '1 / -1' }}>
                         <label className="form-label">Your Message</label>
                         <textarea 
                           placeholder="Tell us everything about your request..." 
@@ -167,10 +175,10 @@ const Contact = () => {
                         type="submit" 
                         disabled={isSubmitting} 
                         className="btn btn-primary btn-lg"
-                        style={{ width: '100%', borderRadius: '4px' }}
+                        style={{ width: '100%', borderRadius: '4px', gridColumn: '1 / -1', gap: '1rem' }}
                       >
                         {isSubmitting ? 'Sending...' : 'Deliver Message'}
-                        <Send size={18} style={{ marginLeft: '1rem' }} />
+                        <Send size={18} />
                       </button>
                     </form>
                   </>
@@ -183,7 +191,7 @@ const Contact = () => {
 
       {/* ── Map / Visual Placeholder ───────────────────────────────────── */}
       <section style={{ height: '500px', width: '100%', position: 'relative' }}>
-         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url("https://images.unsplash.com/photo-1544148103-0773bf10d330?w=1600&h=800&fit=crop")', backgroundSize: 'cover', opacity: 0.3 }} />
+         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url("https://images.unsplash.com/photo-1555396273-367ea468efea?w=1600&auto=format&fit=crop")', backgroundSize: 'cover', opacity: 0.3 }} />
          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, var(--color-bg-base), transparent, var(--color-bg-base))' }} />
          <div className="flex-center" style={{ position: 'absolute', inset: 0 }}>
             <div className="glass" style={{ padding: '2rem 3rem', borderRadius: 'var(--radius-lg)' }}>

@@ -78,7 +78,7 @@ const About = () => {
             >
               <div style={{ position: 'absolute', inset: '-1.5rem', border: '2px solid var(--color-border-gold)', borderRadius: 'var(--radius-2xl)', zIndex: 0 }} />
               <img 
-                src="https://images.unsplash.com/photo-1550966842-8877144e597d?w=1000&h=1200&fit=crop" 
+                src="https://images.unsplash.com/photo-1551218808-94e220e084d2?w=1000&auto=format&fit=crop" 
                 alt="Chef in Action" 
                 style={{ width: '100%', height: 'auto', borderRadius: 'var(--radius-xl)', position: 'relative', zIndex: 1, boxShadow: 'var(--shadow-lg)' }} 
               />
