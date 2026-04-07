@@ -1,12 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, Leaf, Utensils, Star, Soup, Salad, Cake, Coffee, SearchX, ShoppingBag } from 'lucide-react';
+import { Search, Filter, Leaf, Utensils, Star, Soup, Salad, Cake, Coffee, SearchX, ShoppingBag, ArrowRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { menuAPI } from '../api';
 import usePageTitle from '../hooks/usePageTitle';
 
 const CATEGORIES = [
-  { id: 'All',          label: 'All Items',   icon: Utensils },
+  { id: 'All',          label: 'All',         icon: Utensils },
   { id: 'Starters',     label: 'Starters',    icon: Star     },
   { id: 'Soups',        label: 'Soups',       icon: Soup     },
   { id: 'Main Course',  label: 'Main Course', icon: Salad    },
@@ -23,116 +23,82 @@ const Menu = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [vegOnly, setVegOnly]       = useState(false);
 
-  // ── Fetch Menu ────────────────────────────────────────────────────────────
   useEffect(() => {
-    const fetchMenu = async () => {
-      try {
-        setLoading(true);
-        const res = await menuAPI.getAll();
-        setItems(res.data.data || res.data || []);
-      } catch (err) {
-        toast.error('Failed to load menu items. Please try again.');
-        console.error('Menu load error:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchMenu();
+    menuAPI.getAll().then(res => {
+      setItems(res.data.data || res.data || []);
+      setLoading(false);
+    }).catch(() => {
+      toast.error('Could not load menu.');
+      setLoading(false);
+    });
   }, []);
 
-  // ── Filtering Logic ──────────────────────────────────────────────────────
   const filteredItems = useMemo(() => {
     return items.filter(item => {
-      const matchesSearch   = item.name.toLowerCase().includes(search.toLowerCase()) || 
-                              item.description.toLowerCase().includes(search.toLowerCase());
-      const matchesCategory = activeCategory === 'All' || item.category === activeCategory;
-      const matchesVeg      = !vegOnly || item.isVeg;
-      return matchesSearch && matchesCategory && matchesVeg;
+      const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase());
+      const matchesCat    = activeCategory === 'All' || item.category === activeCategory;
+      const matchesVeg    = !vegOnly || item.isVeg;
+      return matchesSearch && matchesCat && matchesVeg;
     });
   }, [items, search, activeCategory, vegOnly]);
 
   return (
-    <div className="page-enter section">
+    <div className="page-enter section" style={{ background: 'var(--color-bg-base)' }}>
       <div className="container">
-
+        
         {/* ── Header ─────────────────────────────────────────────────────────── */}
-        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="section-label"
-          >
-            Culinary Masterpieces
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="section-title"
-            style={{ fontFamily: 'var(--font-display)', marginBottom: '1.5rem' }}
-          >
-            Our <span className="text-gradient">Signature</span> Menu
-          </motion.h2>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            className="gold-divider center"
-          />
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            style={{ maxWidth: '600px', margin: '0 auto', color: 'var(--color-text-secondary)' }}
-          >
-            From traditional classics to contemporary innovations, explore our carefully curated selection of globally-inspired dishes.
-          </motion.p>
+        <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
+          <div className="section-label" style={{ justifyContent: 'center' }}>The Culinary Collection</div>
+          <h2 className="section-title font-display">Taste the <span className="text-gradient">Excellence</span></h2>
+          <p style={{ maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem' }}>
+            Explore our curated menu featuring globally-inspired dishes, each prepared with the finest seasonal ingredients.
+          </p>
         </div>
 
-        {/* ── Controls Section ────────────────────────────────────────────────── */}
-        <div
-          style={{
+        {/* ── Filters & Search ──────────────────────────────────────────────── */}
+        <div 
+          className="glass" 
+          style={{ 
+            padding: '2rem', 
+            borderRadius: 'var(--radius-xl)', 
+            marginBottom: '4rem',
+            boxShadow: 'var(--shadow-md)',
             display: 'flex',
             flexDirection: 'column',
-            gap: '2rem',
-            marginBottom: '3.5rem',
+            gap: '2rem'
           }}
         >
-          {/* Search & Toggle Row */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div className="form-group" style={{ flex: 1, minWidth: '300px', position: 'relative' }}>
-              <Search
-                size={18}
-                style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)' }}
-              />
-              <input
-                type="text"
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', alignItems: 'center' }}>
+            <div style={{ flex: 1, minWidth: '300px', position: 'relative' }}>
+              <Search size={18} style={{ position: 'absolute', left: '1.25rem', top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }} />
+              <input 
+                type="text" 
+                placeholder="Search our collection..." 
                 className="form-input"
-                placeholder="Search for dishes, ingredients..."
+                style={{ paddingLeft: '3.5rem', borderRadius: 'var(--radius-md)', background: 'var(--color-bg-base)' }}
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                style={{ paddingLeft: '3rem' }}
               />
             </div>
-
-            <button
-              onClick={() => setVegOnly(p => !p)}
-              className={`btn ${vegOnly ? 'btn-primary' : 'btn-ghost'}`}
-              style={{ padding: '0.625rem 1.25rem', borderRadius: 'var(--radius-xl)' }}
-            >
-              <Leaf size={16} strokeWidth={2.5} color={vegOnly ? '#0f0d0a' : '#4ade80'} />
-              <span>Veg Only</span>
-            </button>
+            
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <button 
+                onClick={() => setVegOnly(p => !p)}
+                className={`btn btn-sm ${vegOnly ? 'btn-primary' : 'btn-outline'}`}
+                style={{ height: '48px', borderRadius: 'var(--radius-md)' }}
+              >
+                <Leaf size={16} /> Veg Only
+              </button>
+            </div>
           </div>
 
-          {/* Categories Tabs */}
-          <div
+          <div 
             className="no-scrollbar"
-            style={{
-              display: 'flex',
-              gap: '0.75rem',
+            style={{ 
+              display: 'flex', 
+              gap: '1rem', 
               overflowX: 'auto',
-              padding: '0.5rem 0.25rem',
+              paddingBottom: '0.5rem'
             }}
           >
             {CATEGORIES.map(cat => {
@@ -143,126 +109,87 @@ const Menu = () => {
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.625rem',
-                    padding: '0.75rem 1.25rem',
-                    borderRadius: 'var(--radius-lg)',
+                    display: 'flex', alignItems: 'center', gap: '0.75rem',
+                    padding: '0.875rem 1.75rem',
+                    borderRadius: 'var(--radius-md)',
                     border: '1px solid',
-                    borderColor: isActive ? 'var(--color-gold-500)' : 'var(--color-border)',
-                    background: isActive ? 'rgba(196, 144, 32, 0.1)' : 'var(--color-bg-elevated)',
-                    color: isActive ? 'var(--color-gold-200)' : 'var(--color-text-muted)',
-                    fontFamily: 'var(--font-body)',
-                    fontWeight: isActive ? 600 : 500,
-                    fontSize: '0.875rem',
+                    borderColor: isActive ? 'var(--color-primary)' : 'var(--color-border)',
+                    background: isActive ? 'var(--color-primary)' : 'transparent',
+                    color: isActive ? '#FFFFFF' : 'var(--color-text-secondary)',
+                    fontWeight: 600,
                     whiteSpace: 'nowrap',
                     cursor: 'pointer',
-                    transition: 'all 200ms ease',
-                    boxShadow: isActive ? 'var(--shadow-gold-sm)' : 'none',
+                    transition: 'all 0.3s ease'
                   }}
-                  onMouseEnter={e => !isActive && (e.currentTarget.style.borderColor = 'var(--color-warm-600)')}
-                  onMouseLeave={e => !isActive && (e.currentTarget.style.borderColor = 'var(--color-border)')}
                 >
-                  <Icon size={16} strokeWidth={isActive ? 2.5 : 2} />
-                  {cat.label}
+                  <Icon size={16} /> {cat.label}
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* ── Menu Grid ───────────────────────────────────────────────────────── */}
+        {/* ── Menu Items ────────────────────────────────────────────────────── */}
         {loading ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
-            {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="card" style={{ height: '420px', padding: 0 }}>
-                <div className="skeleton" style={{ height: '240px', borderRadius: 0 }} />
-                <div style={{ padding: '1.5rem' }}>
-                  <div className="skeleton" style={{ height: '1.5rem', width: '70%', marginBottom: '1rem' }} />
-                  <div className="skeleton" style={{ height: '3rem', width: '100%', marginBottom: '1.5rem' }} />
-                  <div className="skeleton" style={{ height: '2.5rem', width: '40%' }} />
-                </div>
-              </div>
-            ))}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '3rem' }}>
+            {[1,2,3,4,5,6].map(i => <div key={i} className="card skeleton" style={{ height: '450px' }} />)}
           </div>
         ) : filteredItems.length > 0 ? (
-          <motion.div
-            layout
-            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2.5rem' }}
-          >
-            <AnimatePresence mode="popLayout">
-              {filteredItems.map(item => (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '3rem' }}>
+            <AnimatePresence>
+              {filteredItems.map((item, i) => (
                 <motion.div
-                  key={item._id}
                   layout
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.3 }}
+                  key={item._id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ delay: i * 0.05 }}
                   className="card"
-                  style={{ display: 'flex', flexDirection: 'column' }}
                 >
-                  {/* Item Image */}
-                  <div style={{ position: 'relative', height: '230px', overflow: 'hidden' }}>
-                    <img
-                      src={item.image || `https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop`}
-                      alt={item.name}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 500ms ease' }}
-                      onMouseEnter={e => e.target.style.transform = 'scale(1.08)'}
-                      onMouseLeave={e => e.target.style.transform = 'scale(1)'}
+                  <div style={{ height: '260px', overflow: 'hidden', position: 'relative' }}>
+                    <img 
+                      src={item.image || 'https://images.unsplash.com/photo-1546241072-48010ad2862c?w=800&h=600&fit=crop'} 
+                      alt={item.name} 
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                     />
-                    {/* Badge Overlay */}
                     <div style={{ position: 'absolute', top: '1rem', right: '1rem', display: 'flex', gap: '0.5rem' }}>
-                      {item.isVeg && <span className="badge badge-veg">Veg</span>}
-                      {item.isFeatured && <span className="badge badge-featured">Signature</span>}
+                      {item.isVeg && <span className="badge" style={{ background: '#4ade80' }}>Veg</span>}
+                      {item.category === 'Main Course' && <span className="badge" style={{ background: 'var(--color-gold)', color: '#1A1A1A' }}>Chef's Choice</span>}
                     </div>
                   </div>
-
-                  {/* Content */}
-                  <div style={{ padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                      <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-heading)' }}>{item.name}</h3>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--color-gold-400)', fontSize: '0.875rem' }}>
-                        <Star size={14} fill="currentColor" />
-                        <span style={{ fontWeight: 600 }}>{item.rating || '4.5'}</span>
-                      </div>
+                  <div style={{ padding: '2rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                      <h3 style={{ margin: 0, fontSize: '1.25rem' }}>{item.name}</h3>
+                      <span style={{ color: 'var(--color-primary)', fontWeight: 800, fontSize: '1.35rem' }}>${item.price}</span>
                     </div>
-                    
-                    <p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
-                      {item.description}
-                    </p>
-
-                    <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <span style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--color-gold-300)', fontFamily: 'var(--font-heading)' }}>
-                        ${item.price.toFixed(2)}
-                      </span>
-                      <button className="btn btn-primary btn-sm" style={{ paddingInline: '1rem' }}>
-                        <ShoppingBag size={14} />
-                        Add
+                    <p style={{ fontSize: '0.9rem', marginBottom: '2rem', lineHeight: 1.6, minHeight: '3em' }}>{item.description}</p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1.5rem', borderTop: '1px solid var(--color-border)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-gold)', fontWeight: 700 }}>
+                        <Star size={16} fill="currentColor" /> {item.rating || 4.8}
+                      </div>
+                      <button className="btn btn-primary btn-sm" style={{ padding: '0.5rem 1.25rem', borderRadius: '4px' }}>
+                        Order Now
                       </button>
                     </div>
                   </div>
                 </motion.div>
               ))}
             </AnimatePresence>
-          </motion.div>
+          </div>
         ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            style={{ textAlign: 'center', padding: '5rem 0', color: 'var(--color-text-muted)' }}
-          >
-            <SearchX size={64} style={{ marginBottom: '1rem', opacity: 0.4 }} />
-            <h3>No dishes found</h3>
-            <p>Try adjusting your search or filters to find what you're looking for.</p>
-            <button
+          <div style={{ textAlign: 'center', padding: '10rem 0' }}>
+            <SearchX size={64} style={{ opacity: 0.2, marginBottom: '2rem' }} />
+            <h3 className="font-display">No dishes match your craving</h3>
+            <p>Try clearing your filters or searching for something else.</p>
+            <button 
+              className="btn btn-outline" 
+              style={{ marginTop: '2rem' }}
               onClick={() => { setSearch(''); setActiveCategory('All'); setVegOnly(false); }}
-              className="btn btn-outline btn-sm"
-              style={{ marginTop: '1.5rem' }}
             >
-              Reset All Filters
+              Reset Filters
             </button>
-          </motion.div>
+          </div>
         )}
       </div>
     </div>
