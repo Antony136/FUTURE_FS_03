@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
-import { ChefHat, Eye, EyeOff, Lock, Mail, AlertCircle } from 'lucide-react';
+import { useNavigate, Navigate, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { ChefHat, Eye, EyeOff, Lock, Mail, AlertCircle, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import usePageTitle from '../../hooks/usePageTitle';
 
 const AdminLogin = () => {
-  usePageTitle('Admin Login');
+  usePageTitle('Admin Access — Simple Restaurant');
   const { login, isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
 
@@ -24,7 +25,7 @@ const AdminLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.email || !form.password) {
-      setError('Both fields are required.');
+      setError('Credentials are required for secure access.');
       return;
     }
     setSubmitting(true);
@@ -40,61 +41,73 @@ const AdminLogin = () => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'radial-gradient(ellipse at 60% 30%, rgba(196,144,32,0.08) 0%, transparent 65%), var(--color-bg-base)',
-      padding: '2rem 1rem',
+      background: 'var(--color-bg-base)',
+      position: 'relative',
+      overflow: 'hidden'
     }}>
-      <div style={{ width: '100%', maxWidth: '420px' }}>
-        {/* Logo */}
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <div style={{
-            width: '56px', height: '56px',
-            background: 'linear-gradient(135deg, var(--color-gold-500), var(--color-gold-300))',
-            borderRadius: '14px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            margin: '0 auto 1rem',
-            boxShadow: 'var(--shadow-gold-md)',
-          }}>
-            <ChefHat size={28} color="#0f0d0a" strokeWidth={2} />
-          </div>
-          <h1 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>Admin Portal</h1>
-          <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
-            Simple Restaurant Management
-          </p>
+      
+      {/* Decorative Background Elements */}
+      <div style={{ position: 'absolute', top: '-10%', right: '-10%', width: '40%', height: '40%', background: 'var(--color-primary)', opacity: 0.03, borderRadius: '50%', filter: 'blur(100px)' }} />
+      <div style={{ position: 'absolute', bottom: '-10%', left: '-10%', width: '40%', height: '40%', background: 'var(--color-primary)', opacity: 0.03, borderRadius: '50%', filter: 'blur(100px)' }} />
+
+      <div style={{ width: '100%', maxWidth: '440px', padding: '2rem', position: 'relative', zIndex: 1 }}>
+        
+        <Link to="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-text-muted)', textDecoration: 'none', marginBottom: '3rem', fontSize: '0.9rem', fontWeight: 600 }}>
+           <ArrowLeft size={16} /> Back to User Login
+        </Link>
+
+        {/* Header */}
+        <div style={{ marginBottom: '3rem' }}>
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            style={{
+              width: '60px', height: '60px',
+              background: 'var(--color-primary)',
+              borderRadius: '16px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              marginBottom: '1.5rem',
+              boxShadow: '0 10px 25px rgba(139, 0, 0, 0.2)',
+            }}
+          >
+            <ShieldCheck size={30} color="#FFFFFF" />
+          </motion.div>
+          <h1 className="font-display" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Management <span className="text-gradient">Portal</span></h1>
+          <p style={{ color: 'var(--color-text-muted)', fontWeight: 500 }}>Secure administrative gateway for restaurant operations.</p>
         </div>
 
         {/* Card */}
-        <div className="card" style={{ padding: '2rem' }}>
-          <form id="admin-login-form" onSubmit={handleSubmit} noValidate>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <motion.div 
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.1 }}
+          className="card glass" 
+          style={{ padding: '2.5rem', border: '1px solid var(--color-border)' }}
+        >
+          <form onSubmit={handleSubmit} noValidate>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
-              {/* Error */}
               {error && (
-                <div style={{
-                  display: 'flex', gap: '0.5rem', alignItems: 'center',
-                  padding: '0.75rem 1rem',
-                  background: 'rgba(248,113,113,0.08)',
-                  border: '1px solid rgba(248,113,113,0.2)',
-                  borderRadius: 'var(--radius-md)',
-                  color: 'var(--color-error)',
-                  fontSize: '0.875rem',
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} style={{
+                  display: 'flex', gap: '0.75rem', alignItems: 'center',
+                  padding: '1rem', background: 'rgba(239, 68, 68, 0.1)',
+                  borderRadius: 'var(--radius-md)', color: '#ef4444', fontSize: '0.9rem', fontWeight: 600
                 }}>
-                  <AlertCircle size={15} />
+                  <AlertCircle size={18} />
                   {error}
-                </div>
+                </motion.div>
               )}
 
-              {/* Email */}
               <div className="form-group">
-                <label htmlFor="admin-email" className="form-label">Email Address</label>
+                <label className="form-label" style={{ fontWeight: 700, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Admin Identifier</label>
                 <div style={{ position: 'relative' }}>
-                  <Mail size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)', pointerEvents: 'none' }} />
+                  <Mail size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)' }} />
                   <input
-                    id="admin-email"
                     type="email"
                     name="email"
                     autoComplete="email"
                     className="form-input"
-                    style={{ paddingLeft: '2.5rem' }}
+                    style={{ paddingLeft: '3rem' }}
                     placeholder="admin@simplerestaurant.com"
                     value={form.email}
                     onChange={handleChange}
@@ -103,18 +116,16 @@ const AdminLogin = () => {
                 </div>
               </div>
 
-              {/* Password */}
               <div className="form-group">
-                <label htmlFor="admin-password" className="form-label">Password</label>
+                <label className="form-label" style={{ fontWeight: 700, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Security Key</label>
                 <div style={{ position: 'relative' }}>
-                  <Lock size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)', pointerEvents: 'none' }} />
+                  <Lock size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)' }} />
                   <input
-                    id="admin-password"
                     type={showPw ? 'text' : 'password'}
                     name="password"
                     autoComplete="current-password"
                     className="form-input"
-                    style={{ paddingLeft: '2.5rem', paddingRight: '2.75rem' }}
+                    style={{ paddingLeft: '3rem', paddingRight: '3rem' }}
                     placeholder="••••••••"
                     value={form.password}
                     onChange={handleChange}
@@ -122,33 +133,31 @@ const AdminLogin = () => {
                   />
                   <button
                     type="button"
-                    id="toggle-password-visibility"
                     onClick={() => setShowPw(p => !p)}
-                    style={{ position: 'absolute', right: '0.875rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', padding: 0 }}
-                    aria-label={showPw ? 'Hide password' : 'Show password'}
+                    style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)' }}
                   >
-                    {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
+                    {showPw ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
               </div>
 
-              {/* Submit */}
               <button
-                id="admin-login-submit"
                 type="submit"
                 className="btn btn-primary"
-                style={{ width: '100%', justifyContent: 'center' }}
+                style={{ width: '100%', padding: '1.25rem', borderRadius: 'var(--radius-sm)', marginTop: '0.5rem' }}
                 disabled={submitting || loading}
               >
-                {submitting ? 'Signing in...' : 'Sign In'}
+                {submitting ? 'Verifying Identity...' : 'Confirm Access'}
               </button>
             </div>
           </form>
-        </div>
+        </motion.div>
 
-        <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
-          © {new Date().getFullYear()} Simple Restaurant · Admin Portal
-        </p>
+        <div style={{ marginTop: '3rem', textAlign: 'center' }}>
+           <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', fontWeight: 500 }}>
+              Device: <span style={{ color: 'var(--color-text-primary)' }}>{window.navigator.platform}</span> · Status: <span style={{ color: '#059669' }}>Encryption Active</span>
+           </p>
+        </div>
       </div>
     </div>
   );

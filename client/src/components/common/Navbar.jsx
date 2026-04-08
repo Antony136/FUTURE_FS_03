@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { Menu, X, ChefHat, Phone, Sun, Moon } from 'lucide-react';
+import { Menu, X, ChefHat, Phone, Sun, Moon, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../../context/AuthContext';
 
 const navLinks = [
   { to: '/',            label: 'Home'         },
@@ -12,6 +13,7 @@ const navLinks = [
 ];
 
 const Navbar = () => {
+  const { user, logout, isAuthenticated } = useAuth();
   const [isOpen, setIsOpen]       = useState(false);
   const [scrolled, setScrolled]   = useState(false);
   const [isDark, setIsDark]       = useState(true);
@@ -115,23 +117,38 @@ const Navbar = () => {
             {isDark ? <Sun size={20} /> : <Moon size={20} />}
           </button>
 
-          <a
-            href="tel:+1234567890"
-            style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: '0.5rem', 
-              color: 'var(--color-text-primary)', 
-              fontSize: '0.85rem', 
-              fontWeight: 600, 
-              textDecoration: 'none',
-              opacity: scrolled ? 1 : 0.9
-            }}
-            className="hidden-mobile"
-          >
-            <Phone size={15} color="var(--color-primary)" />
-            <span>+1 (234) 567-890</span>
-          </a>
+          {isAuthenticated ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }} className="hidden-mobile">
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>{user?.name}</div>
+                {(user?.role === 'admin' || user?.role === 'staff') && (
+                  <Link to="/admin" style={{ fontSize: '0.7rem', color: 'var(--color-primary)', textDecoration: 'none', fontWeight: 700 }}>Admin Portal</Link>
+                )}
+              </div>
+              <button 
+                onClick={logout} 
+                style={{ 
+                  background: 'none', 
+                  border: '1px solid var(--color-border)', 
+                  borderRadius: '50%', 
+                  width: '32px', 
+                  height: '32px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  cursor: 'pointer',
+                  color: 'var(--color-text-muted)'
+                }}
+                title="Logout"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          ) : (
+            <Link to="/login" className="nav-link hidden-mobile" style={{ textDecoration: 'none', fontSize: '0.9rem', fontWeight: 700 }}>
+              Sign In
+            </Link>
+          )}
 
           <Link to="/reservations" className="btn btn-primary btn-sm hidden-mobile" style={{ borderRadius: 'var(--radius-sm)' }}>
             Reserve Now
@@ -175,7 +192,13 @@ const Navbar = () => {
                   {label}
                 </NavLink>
               ))}
+              
               <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {isAuthenticated ? (
+                  <button onClick={logout} className="btn btn-outline" style={{ width: '100%' }}>Logout</button>
+                ) : (
+                  <Link to="/login" className="btn btn-outline" style={{ width: '100%' }}>Sign In</Link>
+                )}
                 <Link to="/reservations" className="btn btn-primary" style={{ width: '100%' }}>
                   Book a Table
                 </Link>

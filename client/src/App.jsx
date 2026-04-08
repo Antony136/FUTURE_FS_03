@@ -13,6 +13,7 @@ import About         from './pages/About';
 import Gallery       from './pages/Gallery';
 import Contact       from './pages/Contact';
 import Reservations  from './pages/Reservations';
+import Login         from './pages/Login';
 import NotFound      from './pages/NotFound';
 
 // Admin Pages
@@ -38,8 +39,17 @@ function App() {
       <AuthProvider>
         <Routes>
 
-          {/* ── Public Routes — all share Navbar + Footer via Layout ─ */}
-          <Route element={<Layout />}>
+          {/* ── Public Access (Gated) ── */}
+          <Route path="/login" element={<Login />} />
+
+          {/* ── Authenticated Routes ── */}
+          <Route
+            element={
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
+            }
+          >
             <Route index          element={<Home />}         />
             <Route path="menu"    element={<Menu />}         />
             <Route path="about"   element={<About />}        />
@@ -56,7 +66,7 @@ function App() {
           <Route
             path="/admin"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute redirectTo="/admin/login">
                 <AdminDashboard />
               </ProtectedRoute>
             }
@@ -64,7 +74,7 @@ function App() {
           <Route
             path="/admin/menu"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute redirectTo="/admin/login">
                 <MenuManagement />
               </ProtectedRoute>
             }
@@ -72,7 +82,7 @@ function App() {
           <Route
             path="/admin/reservations"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute redirectTo="/admin/login">
                 <ReservationTracker />
               </ProtectedRoute>
             }
@@ -80,7 +90,7 @@ function App() {
           <Route
             path="/admin/inquiries"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute redirectTo="/admin/login">
                 <InquiryInbox />
               </ProtectedRoute>
             }

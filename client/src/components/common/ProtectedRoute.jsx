@@ -5,11 +5,11 @@ import LoadingSpinner from './LoadingSpinner';
 /**
  * Wraps admin routes — redirects unauthenticated users to /admin/login.
  */
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, redirectTo = '/login' }) => {
   const { isAuthenticated, loading } = useAuth();
 
   if (loading) return <LoadingSpinner size="lg" text="Authenticating..." />;
-  if (!isAuthenticated) return <Navigate to="/admin/login" replace />;
+  if (!isAuthenticated) return <Navigate to={redirectTo} replace />;
 
   return children;
 };

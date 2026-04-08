@@ -28,11 +28,15 @@ const sendTokenResponse = (user, statusCode, res, message) => {
 // @access  Public (should be disabled in production)
 exports.register = async (req, res) => {
   try {
-    if (process.env.NODE_ENV === 'production') {
-      return res.status(403).json({ success: false, message: 'Registration is disabled in production.' });
-    }
+    const { name, email, password, role = 'customer' } = req.body;
 
-    const { name, email, password, role } = req.body;
+    // Restrict administrative registration in production
+    if (role !== 'customer' && process.env.NODE_ENV === 'production') {
+      return res.status(403).json({ 
+        success: false, 
+        message: 'Administrative registration is disabled in production.' 
+      });
+    }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -40,7 +44,7 @@ exports.register = async (req, res) => {
     }
 
     const user = await User.create({ name, email, password, role });
-    sendTokenResponse(user, 201, res, 'Admin registered successfully!');
+    sendTokenResponse(user, 201, res, 'Account created successfully! Welcome to Simple Restaurant.');
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
