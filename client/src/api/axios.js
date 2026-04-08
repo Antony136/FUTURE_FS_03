@@ -6,8 +6,14 @@ export const BACKEND_URL = rawBaseUrl.endsWith('/api')
   ? rawBaseUrl.slice(0, -4) 
   : (rawBaseUrl || 'http://localhost:5000');
 
+// Ensure baseURL ends with /api if provided
+let baseURL = import.meta.env.VITE_API_URL || '/api';
+if (baseURL.startsWith('http') && !baseURL.endsWith('/api')) {
+  baseURL = baseURL.endsWith('/') ? `${baseURL}api` : `${baseURL}/api`;
+}
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
+  baseURL,
   headers: { 'Content-Type': 'application/json' },
   timeout: 10000,
 });
