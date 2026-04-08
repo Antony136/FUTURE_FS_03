@@ -22,7 +22,7 @@ const About = () => {
       {/* ── Hero Section ─────────────────────────────────────────────────── */}
       <section className="section" style={{ paddingTop: '10rem', background: 'var(--color-bg-surface)', textAlign: 'center', position: 'relative' }}>
         <div className="container">
-          <div className="section-label" style={{ justifyContent: 'center' }}>The Heart of Savory Skies</div>
+          <div className="section-label" style={{ justifyContent: 'center' }}>The Heart of Simple Restaurant</div>
           <h1 className="font-display" style={{ marginBottom: '2rem' }}>About Our <span className="text-gradient">Heritage</span></h1>
           <div className="gold-divider center" />
           <p style={{ maxWidth: '700px', margin: '0 auto', fontSize: '1.25rem' }}>
@@ -44,7 +44,7 @@ const About = () => {
               <div className="section-label">Since 2024</div>
               <h2 className="font-display" style={{ marginBottom: '2.5rem' }}>Where Tradition Meets <span className="text-gradient">Innovation</span></h2>
               <p style={{ fontSize: '1.15rem', lineHeight: 1.9, marginBottom: '2.5rem' }}>
-                Founded in the heart of Manhattan, Savory Skies was born from a desire to push the boundaries of traditional fine dining. 
+                Founded in the heart of Manhattan, Simple Restaurant was born from a desire to push the boundaries of traditional fine dining. 
                 What started as a small, passionate group of chefs and critics has grown into a destination for those who seek the extraordinary.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>

@@ -84,7 +84,7 @@ const Navbar = () => {
           </div>
           <div>
             <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: scrolled ? '1.15rem' : '1.35rem', color: 'var(--color-text-primary)', transition: 'font-size 0.3s ease' }}>
-              Savory <span className="text-gradient">Skies</span>
+              Simple <span className="text-gradient">Restaurant</span>
             </div>
           </div>
         </Link>

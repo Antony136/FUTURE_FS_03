@@ -6,7 +6,7 @@ import { menuAPI } from '../api';
 
 const TESTIMONIALS = [
   { id: 1, name: 'Elena Rodriguez', role: 'Food Critic', content: 'An absolute masterpiece. The fusion of flavors and the atmospheric design creates an experience that lingers long after the meal.', rating: 5 },
-  { id: 2, name: 'James Wilson', role: 'Local Diners', content: 'Savory Skies has redefined fine dining in Manhattan. Every dish is a work of art, both visually and culinarily.', rating: 5 },
+  { id: 2, name: 'James Wilson', role: 'Local Diners', content: 'Simple Restaurant has redefined fine dining in Manhattan. Every dish is a work of art, both visually and culinarily.', rating: 5 },
   { id: 3, name: 'Sophia Chen', role: 'Culinary Blogger', content: ' The attention to detail is unparalleled. From the service to the Wagyu, everything was perfection.', rating: 5 },
 ];
 
@@ -203,7 +203,7 @@ const Home = () => {
               <div className="section-label">Our Philosophy</div>
               <h2 className="section-title font-display">Crafting Moments, <br />Not Just Meals</h2>
               <p style={{ fontSize: '1.15rem', marginBottom: '2.5rem', lineHeight: 1.9 }}>
-                Savory Skies was founded on a simple yet profound belief: that dining should be a multisensory journey. 
+                Simple Restaurant was founded on a simple yet profound belief: that dining should be a multisensory journey. 
                 Our culinary team blends time-honoured techniques with progressive artistry to create dishes that tell a story of Manhattan’s vibrant heritage.
               </p>
               <ul style={{ listStyle: 'none', marginBottom: '3.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
@@ -323,7 +323,7 @@ const Home = () => {
           >
             <h2 className="font-display" style={{ fontSize: '3.5rem', marginBottom: '1.5rem' }}>Ready to Experience <span className="text-gradient">True Excellence?</span></h2>
             <p style={{ maxWidth: '600px', margin: '0 auto 3.5rem', fontSize: '1.25rem' }}>
-              Indulge in a world where luxury meets tradition. Secure your table at Savory Skies today.
+              Indulge in a world where luxury meets tradition. Secure your table at Simple Restaurant today.
             </p>
             <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
               <a href="/reservations" className="btn btn-primary btn-lg" style={{ borderRadius: 'var(--radius-sm)' }}>Book Your Journey Now</a>

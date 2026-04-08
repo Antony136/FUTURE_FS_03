@@ -58,7 +58,7 @@ const AdminLogin = () => {
           </div>
           <h1 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>Admin Portal</h1>
           <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
-            Savory Skies Management
+            Simple Restaurant Management
           </p>
         </div>
 
@@ -95,7 +95,7 @@ const AdminLogin = () => {
                     autoComplete="email"
                     className="form-input"
                     style={{ paddingLeft: '2.5rem' }}
-                    placeholder="admin@savoryskies.com"
+                    placeholder="admin@simplerestaurant.com"
                     value={form.email}
                     onChange={handleChange}
                     disabled={submitting}
@@ -147,7 +147,7 @@ const AdminLogin = () => {
         </div>
 
         <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
-          © {new Date().getFullYear()} Savory Skies · Admin Portal
+          © {new Date().getFullYear()} Simple Restaurant · Admin Portal
         </p>
       </div>
     </div>

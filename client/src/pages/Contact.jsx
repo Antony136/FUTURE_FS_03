@@ -195,7 +195,7 @@ const Contact = () => {
          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, var(--color-bg-base), transparent, var(--color-bg-base))' }} />
          <div className="flex-center" style={{ position: 'absolute', inset: 0 }}>
             <div className="glass" style={{ padding: '2rem 3rem', borderRadius: 'var(--radius-lg)' }}>
-               <h4 style={{ margin: 0, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Savory Skies Manhattan</h4>
+               <h4 style={{ margin: 0, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Simple Restaurant Manhattan</h4>
             </div>
          </div>
       </section>

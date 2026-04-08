@@ -4,10 +4,10 @@ import { X, ZoomIn, Camera, Star, Sparkles, LayoutGrid } from 'lucide-react';
 import usePageTitle from '../hooks/usePageTitle';
 
 const GALLERY_IMAGES = [
-  { id: 1, src: 'https://images.unsplash.com/photo-1546241072-48010ad2862c?w=900&h=1200&fit=crop', category: 'Main', title: 'Signature Wagyu' },
-  { id: 2, src: 'https://images.unsplash.com/photo-1544148103-0773bf10d330?w=1000&h=800&fit=crop', category: 'Cocktails', title: 'Midnight Muse' },
-  { id: 3, src: 'https://images.unsplash.com/photo-1550966842-8877144e597d?w=800&h=1000&fit=crop', category: 'Ambiance', title: 'The Golden Lounge' },
-  { id: 4, src: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=1200&h=800&fit=crop', category: 'Chef', title: 'Precision in Motion' },
+  { id: 1, src: 'https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?w=800&auto=format&fit=crop', category: 'Main', title: 'Signature Wagyu' },
+  { id: 2, src: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=1000&h=800&fit=crop', category: 'Cocktails', title: 'Midnight Muse' },
+  { id: 3, src: 'https://images.unsplash.com/photo-1521017432531-fbd92d74426b?w=800&h=1000&fit=crop', category: 'Ambiance', title: 'The Golden Lounge' },
+  { id: 4, src: 'https://images.unsplash.com/photo-1551218808-94e220e084d2?w=1200&h=800&fit=crop', category: 'Chef', title: 'Precision in Motion' },
   { id: 5, src: 'https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=800&h=1000&fit=crop', category: 'Chef', title: 'Precision & Passion' },
   { id: 6, src: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1000&h=800&fit=crop', category: 'Main', title: 'Coastal Delight' },
   { id: 7, src: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&h=800&fit=crop', category: 'Ambiance', title: 'Main Dining Room' },
@@ -32,7 +32,7 @@ const Gallery = () => {
           <h2 className="font-display">Our <span className="text-gradient">Gallery</span></h2>
           <div className="gold-divider center" />
           <p style={{ maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem' }}>
-            A glimpse into the artistry, passion, and elegance that defines Every moment at Savory Skies.
+            A glimpse into the artistry, passion, and elegance that defines Every moment at Simple Restaurant.
           </p>
         </div>
 
@@ -82,6 +82,7 @@ const Gallery = () => {
               layout
               key={img.id}
               onClick={() => setSelectedImage(img)}
+              className="gallery-item"
               style={{
                 marginBottom: '1.5rem',
                 breakInside: 'avoid',
@@ -161,7 +162,7 @@ const Gallery = () => {
         </AnimatePresence>
 
         <style>{`
-          .card:hover .image-overlay { opacity: 1 !important; }
+          .gallery-item:hover .image-overlay { opacity: 1 !important; }
         `}</style>
       </div>
     </div>

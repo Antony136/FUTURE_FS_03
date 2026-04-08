@@ -89,7 +89,7 @@ const Footer = () => {
                 <ChefHat size={20} color="#FFFFFF" strokeWidth={2.5} />
               </div>
               <span className="font-display" style={{ fontWeight: 800, fontSize: '1.5rem', color: 'var(--color-text-primary)' }}>
-                Savory Skies
+                Simple Restaurant
               </span>
             </Link>
             <p style={{ fontSize: '0.95rem', lineHeight: 1.8, marginBottom: '2rem', maxWidth: '300px' }}>
@@ -143,7 +143,7 @@ const Footer = () => {
               {[
                 { icon: MapPin, text: '123 Skyview Ave, Manhattan, NY' },
                 { icon: Phone, text: '+1 (234) 567-890' },
-                { icon: Mail,  text: 'concierge@savoryskies.com' },
+                { icon: Mail,  text: 'concierge@simplerestaurant.com' },
               ].map(({ icon: Icon, text }, i) => (
                 <div key={i} style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                   <Icon size={18} color="var(--color-gold)" style={{ flexShrink: 0 }} />
@@ -162,7 +162,7 @@ const Footer = () => {
           gap: '1rem',
         }}>
           <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', margin: 0 }}>
-            © {new Date().getFullYear()} Savory Skies Manhattan. Meticulously Crafted.
+            © {new Date().getFullYear()} Simple Restaurant Manhattan. Meticulously Crafted.
           </p>
           <div style={{ display: 'flex', gap: '2rem' }}>
             <Link to="/admin/login" style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', textDecoration: 'none' }}>Admin Entrance</Link>

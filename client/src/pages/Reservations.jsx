@@ -75,7 +75,7 @@ const Reservations = () => {
             <div className="section-label">The Art of Reservation</div>
             <h1 className="font-display">Book a <span className="text-gradient">Journey</span></h1>
             <p style={{ fontSize: '1.15rem', marginTop: '1.5rem', lineHeight: 1.8 }}>
-              Join us for an evening of unparalleled culinary excellence. Every reservation at Savory Skies is treated as a bespoke event.
+              Join us for an evening of unparalleled culinary excellence. Every reservation at Simple Restaurant is treated as a bespoke event.
             </p>
             <div style={{ marginTop: '3.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>

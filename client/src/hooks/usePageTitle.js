@@ -8,8 +8,8 @@ const usePageTitle = (title) => {
   useEffect(() => {
     const prev = document.title;
     document.title = title
-      ? `${title} — Savory Skies`
-      : 'Savory Skies — Premium Dining Experience';
+      ? `${title} — Simple Restaurant`
+      : 'Simple Restaurant — Premium Dining Experience';
     return () => { document.title = prev; };
   }, [title]);
 };
