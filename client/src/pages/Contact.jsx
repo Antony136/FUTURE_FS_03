@@ -11,7 +11,7 @@ const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: '',
+    subject: 'General Inquiry',
     message: '',
   });
 
@@ -22,7 +22,7 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await contactAPI.create(formData);
+      await contactAPI.submit(formData);
       setIsSubmitted(true);
       toast.success('Your message has been sent. We will respond shortly.');
     } catch (err) {

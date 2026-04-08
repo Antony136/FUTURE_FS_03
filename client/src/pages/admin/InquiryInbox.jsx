@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Mail, User, Calendar, Trash2, CheckCircle, Search, MessageSquare, Info } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Mail, User, Calendar, Trash2, CheckCircle, Search, MessageSquare, Info, ArrowLeft, Inbox, Clock, ShieldCheck, Star } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { contactAPI } from '../../api';
 import usePageTitle from '../../hooks/usePageTitle';
 import { Link } from 'react-router-dom';
 
 const InquiryInbox = () => {
-  usePageTitle('Inquiries');
+  usePageTitle('Concierge Communications');
   const [inquiries, setInquiries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [filterMode, setFilterMode] = useState('All');
 
   const fetchInquiries = async () => {
     try {
@@ -18,7 +19,7 @@ const InquiryInbox = () => {
       const res = await contactAPI.getAll();
       setInquiries(res.data.data || res.data || []);
     } catch (err) {
-      toast.error('Failed to load inquiries.');
+      toast.error('Failed to sync communications.');
     } finally {
       setLoading(false);
     }
@@ -31,128 +32,181 @@ const InquiryInbox = () => {
   const handleMarkAsRead = async (id) => {
     try {
       await contactAPI.markAsRead(id);
-      toast.success('Marked as read.');
+      toast.success('Communication marked as reviewed.');
       fetchInquiries();
     } catch (err) {
-      toast.error('Failed to update.');
+      toast.error('Failed to update status.');
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Delete this inquiry?')) return;
+    if (!window.confirm('Permanent deletion from the archive. Proceed?')) return;
     try {
       await contactAPI.delete(id);
-      toast.success('Inquiry removed.');
+      toast.success('Inquiry archived permanently.');
       fetchInquiries();
     } catch (err) {
-      toast.error('Failed to delete.');
+      toast.error('Archive operation failed.');
     }
   };
 
-  const filtered = inquiries.filter(i => 
-    i.name.toLowerCase().includes(search.toLowerCase()) ||
-    i.subject.toLowerCase().includes(search.toLowerCase()) ||
-    i.message.toLowerCase().includes(search.toLowerCase())
-  ).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const filtered = inquiries.filter(i => {
+    const matchesSearch = i.name.toLowerCase().includes(search.toLowerCase()) || i.message.toLowerCase().includes(search.toLowerCase());
+    const matchesFilter = filterMode === 'All' ? true : filterMode === 'Unread' ? !i.isRead : i.isRead;
+    return matchesSearch && matchesFilter;
+  }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg-base)', padding: '2rem' }}>
-      <div className="container" style={{ maxWidth: '1000px' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--color-bg-base)', display: 'flex' }}>
+      
+      {/* Sidebar Space */}
+      <div style={{ width: '80px', flexShrink: 0 }} />
+
+      <div style={{ flex: 1, padding: '3rem 5rem 5rem' }}>
         
-        {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
-          <div>
-            <Link to="/admin" style={{ color: 'var(--color-gold-500)', fontSize: '0.8rem', textDecoration: 'none', marginBottom: '0.5rem', display: 'block' }}>← Back to Dashboard</Link>
-            <h1 style={{ fontSize: '1.75rem' }}>Inquiries Inbox</h1>
-          </div>
-          <div style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>
-            {inquiries.filter(i => !i.isRead).length} unread
-          </div>
-        </div>
-
-        {/* Search */}
-        <div className="card" style={{ padding: '1rem', marginBottom: '2rem' }}>
-          <div style={{ position: 'relative' }}>
-            <Search size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)' }} />
-            <input 
-              type="text" 
-              className="form-input" 
-              placeholder="Search messages..." 
-              style={{ paddingLeft: '2.5rem' }} 
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-            />
-          </div>
-        </div>
-
-        {/* List */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          {loading ? (
-            <div className="card" style={{ padding: '3rem', textAlign: 'center', color: 'var(--color-text-muted)' }}>Loading inquiries...</div>
-          ) : filtered.length === 0 ? (
-            <div className="card" style={{ padding: '3rem', textAlign: 'center', color: 'var(--color-text-muted)' }}>No messages in your inbox.</div>
-          ) : filtered.map(i => (
-            <motion.div
-              layout
-              key={i._id}
-              className="card"
-              style={{ 
-                padding: '1.5rem', 
-                borderLeft: i.isRead ? '1px solid var(--color-border)' : '4px solid var(--color-gold-500)',
-                position: 'relative',
-                overflow: 'hidden'
-              }}
-            >
-              {!i.isRead && (
-                <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--color-gold-500)', color: '#000', fontSize: '10px', fontWeight: 900, padding: '2px 8px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>NEW</div>
-              )}
-
-              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1.5rem', marginBottom: '1.5rem' }}>
-                <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center' }}>
-                  <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--color-bg-elevated)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-gold-400)', border: '1px solid var(--color-border)' }}>
-                    <User size={24} />
-                  </div>
-                  <div>
-                    <div style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--color-text-primary)' }}>{i.name}</div>
-                    <div style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                      <Mail size={12} className="text-gradient" /> {i.email}
-                    </div>
-                  </div>
+        {/* Header Section */}
+        <header style={{ marginBottom: '4rem' }}>
+          <Link to="/admin" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-text-muted)', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 700, marginBottom: '1rem' }}>
+             <ArrowLeft size={14} /> Back to Hub
+          </Link>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+             <div>
+                <h1 className="font-display" style={{ fontSize: '2.5rem' }}>Communication <span className="text-gradient">Inbox</span></h1>
+                <p style={{ color: 'var(--color-text-muted)', marginTop: '0.5rem' }}>Managing concierge inquiries, feedback, and private event requests.</p>
+             </div>
+             <div style={{ padding: '1rem 1.5rem', background: 'var(--color-bg-elevated)', borderRadius: '12px', border: '1px solid var(--color-border)', display: 'flex', gap: '2rem' }}>
+                <div style={{ textAlign: 'center' }}>
+                   <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--color-text-muted)', textTransform: 'uppercase' }}>Unread</div>
+                   <div style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--color-primary)' }}>{inquiries.filter(i => !i.isRead).length}</div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--color-text-muted)', fontSize: '0.8rem' }}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                    <Calendar size={13} /> {new Date(i.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
-                  </span>
-                  <span style={{ opacity: 0.3 }}>|</span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                    <Info size={13} /> {i.subject || 'General Inquiry'}
-                  </span>
+                <div style={{ width: '1px', background: 'var(--color-border)' }} />
+                <div style={{ textAlign: 'center' }}>
+                   <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--color-text-muted)', textTransform: 'uppercase' }}>Total</div>
+                   <div style={{ fontSize: '1.25rem', fontWeight: 900 }}>{inquiries.length}</div>
                 </div>
-              </div>
+             </div>
+          </div>
+        </header>
 
-              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)', marginBottom: '1.5rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
-                  <MessageSquare size={14} style={{ color: 'var(--color-gold-500)' }} />
-                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-gold-500)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Message Content</span>
-                </div>
-                <p style={{ fontSize: '1rem', color: 'var(--color-text-secondary)', lineHeight: 1.7, margin: 0, fontStyle: 'italic' }}>"{i.message}"</p>
-              </div>
+        {/* Filters */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem', gap: '2rem' }}>
+           <div style={{ position: 'relative', flex: 1, maxWidth: '500px' }}>
+              <Search size={18} style={{ position: 'absolute', left: '1.25rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)' }} />
+              <input 
+                type="text" 
+                className="form-input" 
+                placeholder="Search communications..." 
+                style={{ paddingLeft: '3.5rem', borderRadius: '12px' }} 
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+              />
+           </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
-                {!i.isRead && (
-                  <button onClick={() => handleMarkAsRead(i._id)} className="btn btn-ghost btn-sm" style={{ gap: '0.5rem', borderColor: 'var(--color-success)33', color: 'var(--color-success)' }}>
-                    <CheckCircle size={15} /> Mark as Read
-                  </button>
-                )}
-                <button onClick={() => handleDelete(i._id)} className="btn btn-ghost btn-sm" style={{ color: 'var(--color-error)', gap: '0.5rem', borderColor: 'var(--color-error)33' }}>
-                  <Trash2 size={15} /> Delete Inquiry
+           <div style={{ display: 'flex', background: 'var(--color-bg-elevated)', padding: '0.25rem', borderRadius: '10px', border: '1px solid var(--color-border)' }}>
+              {['All', 'Unread', 'Reviewed'].map(mode => (
+                <button 
+                  key={mode}
+                  onClick={() => setFilterMode(mode)}
+                  style={{ 
+                    padding: '0.5rem 1.5rem', 
+                    borderRadius: '8px', 
+                    fontSize: '0.8rem', 
+                    fontWeight: 800, 
+                    textTransform: 'uppercase',
+                    background: filterMode === mode ? 'var(--color-primary)' : 'transparent',
+                    color: filterMode === mode ? 'white' : 'var(--color-text-muted)',
+                    border: 'none', cursor: 'pointer', transition: 'all 0.3s'
+                  }}
+                >
+                  {mode}
                 </button>
+              ))}
+           </div>
+        </div>
+
+        {/* Message Thread */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+           {loading ? (
+              Array(3).fill(0).map((_, i) => <div key={i} className="card" style={{ height: '200px', opacity: 0.5, animation: 'pulse 2s infinite' }} />)
+           ) : filtered.length === 0 ? (
+              <div style={{ padding: '10rem', textAlign: 'center' }}>
+                 <Inbox size={64} color="var(--color-border)" style={{ marginBottom: '2rem' }} />
+                 <h2 className="font-display" style={{ fontSize: '1.5rem', color: 'var(--color-text-muted)' }}>The communication channel is currently silent.</h2>
               </div>
-            </motion.div>
-          ))}
+           ) : filtered.map((i, idx) => (
+              <motion.div
+                layout
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.05 }}
+                key={i._id}
+                className="card glass"
+                style={{ 
+                  padding: '0', 
+                  overflow: 'hidden', 
+                  border: '1px solid var(--color-border)', 
+                  borderLeft: i.isRead ? '1px solid var(--color-border)' : '6px solid var(--color-primary)' 
+                }}
+              >
+                 <div style={{ padding: '2rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
+                       <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center' }}>
+                          <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-primary)' }}>
+                             <User size={24} />
+                          </div>
+                          <div>
+                             <div style={{ fontWeight: 800, fontSize: '1.15rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                {i.name} {!i.isRead && <span style={{ width: '8px', height: '8px', background: 'var(--color-primary)', borderRadius: '50%' }} />}
+                             </div>
+                             <div style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', fontWeight: 600 }}>{i.email}</div>
+                          </div>
+                       </div>
+                       
+                       <div style={{ textAlign: 'right' }}>
+                          <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--color-text-muted)', textTransform: 'uppercase' }}>
+                             {new Date(i.createdAt).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}
+                          </div>
+                          <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--color-primary)', marginTop: '0.25rem' }}>{i.subject || 'General Inquiry'}</div>
+                       </div>
+                    </div>
+
+                    <div style={{ background: 'var(--color-bg-elevated)', padding: '1.5rem 2rem', borderRadius: '14px', border: '1px solid var(--color-border)', marginBottom: '1.5rem' }}>
+                       <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                          <MessageSquare size={16} color="var(--color-primary)" style={{ marginTop: '4px' }} />
+                          <p style={{ fontSize: '1.1rem', color: 'var(--color-text-primary)', lineHeight: 1.6, fontStyle: 'italic' }}>
+                             "{i.message}"
+                          </p>
+                       </div>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: 'var(--color-text-muted)', fontWeight: 700 }}>
+                          <Clock size={12} /> Received {Math.round((new Date() - new Date(i.createdAt)) / (1000 * 60 * 60 * 24))} days ago
+                       </div>
+                       <div style={{ display: 'flex', gap: '1rem' }}>
+                          {!i.isRead && (
+                             <button onClick={() => handleMarkAsRead(i._id)} className="btn btn-ghost btn-sm" style={{ gap: '0.5rem', color: '#059669', border: '1px solid rgba(5, 150, 105, 0.2)' }}>
+                                <CheckCircle size={14} /> Resolve Inquiry
+                             </button>
+                          )}
+                          <button onClick={() => handleDelete(i._id)} className="btn btn-ghost btn-sm" style={{ gap: '0.5rem', color: 'var(--color-error)', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+                             <Trash2 size={14} /> Archive Forever
+                          </button>
+                       </div>
+                    </div>
+                 </div>
+              </motion.div>
+           ))}
         </div>
 
       </div>
+
+      <style>{`
+         @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.3; }
+         }
+      `}</style>
     </div>
   );
 };

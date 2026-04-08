@@ -4,6 +4,7 @@ import { Search, Filter, Leaf, Utensils, Star, Soup, Salad, Cake, Coffee, Search
 import toast from 'react-hot-toast';
 import { menuAPI } from '../api';
 import usePageTitle from '../hooks/usePageTitle';
+import { useCart } from '../context/CartContext';
 
 const CATEGORIES = [
   { id: 'All',          label: 'All',         icon: Utensils },
@@ -16,6 +17,7 @@ const CATEGORIES = [
 
 const Menu = () => {
   usePageTitle('Our Menu');
+  const { addToCart } = useCart();
 
   const [items, setItems]           = useState([]);
   const [loading, setLoading]       = useState(true);
@@ -168,8 +170,12 @@ const Menu = () => {
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-gold)', fontWeight: 700 }}>
                         <Star size={16} fill="currentColor" /> {item.rating || 4.8}
                       </div>
-                      <button className="btn btn-primary btn-sm" style={{ padding: '0.5rem 1.25rem', borderRadius: '4px' }}>
-                        Order Now
+                      <button 
+                        onClick={() => addToCart(item)}
+                        className="btn btn-primary btn-sm" 
+                        style={{ padding: '0.5rem 1.25rem', borderRadius: '4px', gap: '0.5rem' }}
+                      >
+                        <ShoppingBag size={14} /> Add to Selection
                       </button>
                     </div>
                   </div>

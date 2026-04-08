@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { Menu, X, ChefHat, Phone, Sun, Moon, User } from 'lucide-react';
+import { Menu, X, ChefHat, Phone, Sun, Moon, User, ShoppingCart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../../context/CartContext';
+import Cart from './Cart';
 
 const navLinks = [
   { to: '/',            label: 'Home'         },
@@ -14,7 +16,9 @@ const navLinks = [
 
 const Navbar = () => {
   const { user, logout, isAuthenticated } = useAuth();
+  const { cartCount } = useCart();
   const [isOpen, setIsOpen]       = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const [scrolled, setScrolled]   = useState(false);
   const [isDark, setIsDark]       = useState(true);
   const location                  = useLocation();
@@ -53,6 +57,8 @@ const Navbar = () => {
   }, []);
 
   return (
+    <>
+    <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     <header
       id="navbar"
       className={scrolled ? 'glass' : ''}
@@ -115,6 +121,39 @@ const Navbar = () => {
             aria-label="Toggle Theme"
           >
             {isDark ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+
+          {/* Cart Trigger */}
+          <button 
+            onClick={() => setIsCartOpen(true)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-primary)', display: 'flex', alignItems: 'center', padding: '0.4rem', position: 'relative' }}
+            aria-label="View Selection"
+          >
+            <ShoppingCart size={20} />
+            {cartCount > 0 && (
+              <motion.span 
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                style={{ 
+                  position: 'absolute', 
+                  top: '-2px', 
+                  right: '-2px', 
+                  background: 'var(--color-primary)', 
+                  color: 'white', 
+                  fontSize: '0.65rem', 
+                  fontWeight: 800, 
+                  width: '18px', 
+                  height: '18px', 
+                  borderRadius: '50%', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                }}
+              >
+                {cartCount}
+              </motion.span>
+            )}
           </button>
 
           {isAuthenticated ? (
@@ -216,6 +255,7 @@ const Navbar = () => {
         }
       `}</style>
     </header>
+    </>
   );
 };
 

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
 
 // Layout & Guards
 import Layout        from './components/common/Layout';
@@ -24,6 +25,9 @@ import ReservationTracker from './pages/admin/ReservationTracker';
 import InquiryInbox    from './pages/admin/InquiryInbox';
 
 
+import OrderManagement from './pages/admin/OrderManagement';
+
+
 const ScrollToTop = () => {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -37,7 +41,8 @@ function App() {
     <BrowserRouter>
       <ScrollToTop />
       <AuthProvider>
-        <Routes>
+        <CartProvider>
+          <Routes>
 
           {/* ── Public Access (Gated) ── */}
           <Route path="/login" element={<Login />} />
@@ -95,8 +100,17 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/admin/orders"
+            element={
+              <ProtectedRoute redirectTo="/admin/login">
+                <OrderManagement />
+              </ProtectedRoute>
+            }
+          />
 
         </Routes>
+        </CartProvider>
       </AuthProvider>
     </BrowserRouter>
   );

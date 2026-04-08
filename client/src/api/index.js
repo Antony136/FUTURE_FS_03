@@ -26,6 +26,9 @@ export const contactAPI = {
 
 export const adminAPI = {
   getStats: () => api.get('/admin/stats'),
+  uploadImage: (formData) => api.post('/upload', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
 };
 
 export const authAPI = {
