@@ -6,6 +6,10 @@
 
 **Simple Restaurant** is a high-end, full-stack MERN application designed for a luxury culinary experience. It features a bespoke design system, a sophisticated administrative hub, and a personalized customer journey.
 
+## 📺 Live Demo
+
+![Project Demo](demo.gif)
+
 ---
 
 ## ✨ Key Features
