@@ -32,9 +32,12 @@ const Reservations = () => {
       const submissionData = { ...formData, guests: Number(formData.guests) };
       await reservationAPI.create(submissionData);
       setSubmitted(true);
-      toast.success('Your table has been reserved!');
+      toast.success('Your table has been reserved!', {
+        icon: '✅',
+        id: 'reservation-success'
+      });
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to submit reservation.');
+      toast.error(err.response?.data?.message || 'Failed to submit reservation.', { id: 'reservation-error' });
     } finally {
       setSubmitting(false);
     }

@@ -1,7 +1,13 @@
 import axios from 'axios';
 
+// Get the base backend URL (strip /api from VITE_API_URL if present for uploads)
+const rawBaseUrl = import.meta.env.VITE_API_URL || '';
+export const BACKEND_URL = rawBaseUrl.endsWith('/api') 
+  ? rawBaseUrl.slice(0, -4) 
+  : (rawBaseUrl || 'http://localhost:5000');
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   headers: { 'Content-Type': 'application/json' },
   timeout: 10000,
 });

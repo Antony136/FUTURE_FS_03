@@ -82,15 +82,15 @@ const MenuManagement = () => {
     try {
       if (editingItem) {
         await menuAPI.update(editingItem._id, formData);
-        toast.success('Collection entry refined.');
+        toast.success('Collection entry refined.', { icon: '✅', id: 'menu-update' });
       } else {
         await menuAPI.create(formData);
-        toast.success('New signature dish added.');
+        toast.success('New signature dish added.', { icon: '✅', id: 'menu-create' });
       }
       fetchMenu();
       handleCloseModal();
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Update failed.');
+      toast.error(err.response?.data?.message || 'Update failed.', { id: 'menu-error' });
     }
   };
 
@@ -98,10 +98,10 @@ const MenuManagement = () => {
     if (!window.confirm('Permanent removal. Proceed with collection cleanup?')) return;
     try {
       await menuAPI.delete(id);
-      toast.success('Dish removed from collection.');
+      toast.success('Dish removed from collection.', { icon: '✅', id: 'menu-delete' });
       fetchMenu();
     } catch (err) {
-      toast.error('Removal failed.');
+      toast.error('Removal failed.', { id: 'menu-delete-error' });
     }
   };
 
@@ -118,9 +118,9 @@ const MenuManagement = () => {
       setUploadLoading(true);
       const res = await adminAPI.uploadImage(formDataUpload);
       setFormData({ ...formData, image: res.data.data });
-      toast.success('Visual asset uploaded.');
+      toast.success('Visual asset uploaded.', { icon: '✅', id: 'menu-upload' });
     } catch (err) {
-      toast.error('Asset upload failed.');
+      toast.error('Asset upload failed.', { id: 'menu-upload-error' });
     } finally {
       setUploadLoading(false);
     }

@@ -24,9 +24,12 @@ const Contact = () => {
     try {
       await contactAPI.submit(formData);
       setIsSubmitted(true);
-      toast.success('Your message has been sent. We will respond shortly.');
+      toast.success('Your message has been sent. We will respond shortly.', {
+        icon: '✅',
+        id: 'contact-success'
+      });
     } catch (err) {
-      toast.error('Could not send message. Please try again later.');
+      toast.error('Could not send message. Please try again later.', { id: 'contact-error' });
     } finally {
       setIsSubmitting(false);
     }

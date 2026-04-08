@@ -3,14 +3,18 @@ const router = express.Router();
 const {
   createReservation,
   getAllReservations,
+  getMyReservations,
   getReservationById,
   updateReservationStatus,
   deleteReservation,
 } = require('../controllers/reservationController');
-const { protect, restrictTo } = require('../middleware/auth');
+const { protect, restrictTo, optionalProtect } = require('../middleware/auth');
 
-// Public route
-router.post('/', createReservation);
+// Public route (optional auth to link reservation)
+router.post('/', optionalProtect, createReservation);
+
+// User specific routes
+router.get('/my-reservations', protect, getMyReservations);
 
 // Admin-protected routes
 router.get('/', protect, restrictTo('admin'), getAllReservations);

@@ -31,7 +31,7 @@ const Layout = () => {
           },
           success: {
             iconTheme: {
-              primary: 'var(--color-gold-400)',
+              primary: 'var(--color-gold)',
               secondary: 'var(--color-bg-base)',
             },
           },

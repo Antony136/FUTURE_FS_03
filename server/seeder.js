@@ -2,10 +2,13 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const MenuItem = require('./models/MenuItem');
 const User = require('./models/User');
+const Order = require('./models/Order');
+const Reservation = require('./models/Reservation');
+const Contact = require('./models/Contact');
 
 dotenv.config();
 
-const menuItems = [
+const menuItemsData = [
   // ── Starters ──────────────────────────────────────────────────────────────
   {
     name: 'Crispy Bruschetta',
@@ -176,6 +179,64 @@ const adminUser = {
   role: 'admin',
 };
 
+const customerUser = {
+  name: 'John Doe',
+  email: 'john@example.com',
+  password: 'User@123',
+  role: 'customer',
+};
+
+const reservationsData = [
+  {
+    name: 'Alice Cooper',
+    email: 'alice@example.com',
+    phone: '+1 234 567 8900',
+    date: new Date(Date.now() + 86400000 * 2), // 2 days from now
+    time: '19:00',
+    guests: 4,
+    occasion: 'Birthday',
+    message: 'We would like a window seat if possible.',
+    status: 'confirmed',
+  },
+  {
+    name: 'Bob Marley',
+    email: 'bob@example.com',
+    phone: '+1 987 654 3210',
+    date: new Date(Date.now() + 86400000 * 5), // 5 days from now
+    time: '20:30',
+    guests: 2,
+    occasion: 'Date Night',
+    status: 'pending',
+  },
+  {
+    name: 'Charlie Brown',
+    email: 'charlie@example.com',
+    phone: '+1 555 0199',
+    date: new Date(Date.now() - 86400000 * 1), // Yesterday
+    time: '18:00',
+    guests: 6,
+    occasion: 'Family Gathering',
+    status: 'completed',
+  }
+];
+
+const contactsData = [
+  {
+    name: 'Sarah Connor',
+    email: 'sarah@resistance.com',
+    subject: 'Event Inquiry',
+    message: 'Do you host private events for up to 50 people?',
+    isRead: false,
+  },
+  {
+    name: 'James Bond',
+    email: '007@mi6.gov.uk',
+    subject: 'Special Request',
+    message: 'I need a table for two, quiet corner. Martini, shaken not stirred.',
+    isRead: true,
+  }
+];
+
 const seedDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI, { dbName: process.env.DB_NAME || 'savory-skies' });
@@ -184,15 +245,73 @@ const seedDB = async () => {
     // Clear existing data
     await MenuItem.deleteMany({});
     await User.deleteMany({});
-    console.log('🗑️  Cleared existing data.');
+    await Order.deleteMany({});
+    await Reservation.deleteMany({});
+    await Contact.deleteMany({});
+    console.log('🗑️  Cleared existing collections.');
 
     // Seed menu items
-    await MenuItem.insertMany(menuItems);
-    console.log(`🍽️  Seeded ${menuItems.length} menu items.`);
+    const createdMenuItems = await MenuItem.insertMany(menuItemsData);
+    console.log(`🍽️  Seeded ${createdMenuItems.length} menu items.`);
 
-    // Seed admin user
-    await User.create(adminUser);
-    console.log(`👤 Admin user created: ${adminUser.email} / ${adminUser.password}`);
+    // Seed users
+    const admin = await User.create(adminUser);
+    const customer = await User.create(customerUser);
+    console.log(`👤 Admin user created: ${admin.email}`);
+    console.log(`👤 Customer user created: ${customer.email}`);
+
+    // Seed Reservations
+    for (const r of reservationsData) {
+      await Reservation.create(r);
+    }
+    console.log(`📅 Seeded ${reservationsData.length} reservations.`);
+
+    // Seed Contacts
+    await Contact.insertMany(contactsData);
+    console.log(`✉️  Seeded ${contactsData.length} contact messages.`);
+
+    // Seed Orders
+    const ordersData = [
+      {
+        user: customer._id,
+        items: [
+          {
+            menuItem: createdMenuItems[0]._id,
+            name: createdMenuItems[0].name,
+            price: createdMenuItems[0].price,
+            quantity: 2
+          },
+          {
+            menuItem: createdMenuItems[5]._id,
+            name: createdMenuItems[5].name,
+            price: createdMenuItems[5].price,
+            quantity: 1
+          }
+        ],
+        totalAmount: (createdMenuItems[0].price * 2) + createdMenuItems[5].price,
+        status: 'pending',
+        paymentStatus: 'unpaid',
+        deliveryAddress: '123 Baker Street, London'
+      },
+      {
+        user: customer._id,
+        items: [
+          {
+            menuItem: createdMenuItems[8]._id,
+            name: createdMenuItems[8].name,
+            price: createdMenuItems[8].price,
+            quantity: 1
+          }
+        ],
+        totalAmount: createdMenuItems[8].price,
+        status: 'delivered',
+        paymentStatus: 'paid',
+        deliveryAddress: '123 Baker Street, London'
+      }
+    ];
+
+    await Order.insertMany(ordersData);
+    console.log(`🛍️  Seeded ${ordersData.length} orders.`);
 
     console.log('\n✅ Database seeding complete!');
     process.exit(0);

@@ -14,6 +14,7 @@ import About         from './pages/About';
 import Gallery       from './pages/Gallery';
 import Contact       from './pages/Contact';
 import Reservations  from './pages/Reservations';
+import MyAccount     from './pages/MyAccount';
 import Login         from './pages/Login';
 import NotFound      from './pages/NotFound';
 
@@ -61,6 +62,7 @@ function App() {
             <Route path="gallery" element={<Gallery />}      />
             <Route path="contact" element={<Contact />}      />
             <Route path="reservations" element={<Reservations />} />
+            <Route path="account" element={<MyAccount />} />
             <Route path="*"       element={<NotFound />}     />
           </Route>
 

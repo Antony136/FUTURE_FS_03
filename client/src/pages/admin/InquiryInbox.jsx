@@ -19,7 +19,7 @@ const InquiryInbox = () => {
       const res = await contactAPI.getAll();
       setInquiries(res.data.data || res.data || []);
     } catch (err) {
-      toast.error('Failed to sync communications.');
+      toast.error('Failed to sync communications.', { id: 'inquiry-fetch-error' });
     } finally {
       setLoading(false);
     }
@@ -32,10 +32,10 @@ const InquiryInbox = () => {
   const handleMarkAsRead = async (id) => {
     try {
       await contactAPI.markAsRead(id);
-      toast.success('Communication marked as reviewed.');
+      toast.success('Communication marked as reviewed.', { icon: '✅', id: `inquiry-read-${id}` });
       fetchInquiries();
     } catch (err) {
-      toast.error('Failed to update status.');
+      toast.error('Failed to update status.', { id: 'inquiry-read-error' });
     }
   };
 
@@ -43,10 +43,10 @@ const InquiryInbox = () => {
     if (!window.confirm('Permanent deletion from the archive. Proceed?')) return;
     try {
       await contactAPI.delete(id);
-      toast.success('Inquiry archived permanently.');
+      toast.success('Inquiry archived permanently.', { icon: '✅', id: `inquiry-delete-${id}` });
       fetchInquiries();
     } catch (err) {
-      toast.error('Archive operation failed.');
+      toast.error('Archive operation failed.', { id: 'inquiry-delete-error' });
     }
   };
 

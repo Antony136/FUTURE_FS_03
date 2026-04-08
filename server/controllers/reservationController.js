@@ -18,7 +18,7 @@ exports.createReservation = async (req, res) => {
       });
     }
 
-    const reservation = await Reservation.create({
+    const reservationData = {
       name,
       email,
       phone,
@@ -27,7 +27,14 @@ exports.createReservation = async (req, res) => {
       guests,
       occasion,
       message,
-    });
+    };
+
+    // Link to user if logged in
+    if (req.user) {
+      reservationData.user = req.user._id;
+    }
+
+    const reservation = await Reservation.create(reservationData);
 
     res.status(201).json({
       success: true,
@@ -36,6 +43,28 @@ exports.createReservation = async (req, res) => {
     });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+// @desc    Get logged in user reservations
+// @route   GET /api/reservations/my-reservations
+// @access  Private
+exports.getMyReservations = async (req, res) => {
+  try {
+    const reservations = await Reservation.find({ 
+      $or: [
+        { user: req.user._id },
+        { email: req.user.email } // Fallback for reservations made before linking
+      ]
+    }).sort({ date: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: reservations.length,
+      data: reservations,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 

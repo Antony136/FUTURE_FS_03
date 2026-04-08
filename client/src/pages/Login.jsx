@@ -32,10 +32,13 @@ const Login = () => {
     }
 
     if (result.success) {
-      toast.success(isLogin ? 'Welcome back to excellence!' : 'Experience activated successfully!');
+      toast.success(isLogin ? 'Welcome back to excellence!' : 'Experience activated successfully!', {
+        icon: '✅',
+        id: 'auth-success'
+      });
       navigate('/');
     } else {
-      toast.error(result.message);
+      toast.error(result.message, { id: 'auth-error' });
     }
     setLoading(false);
   };

@@ -12,9 +12,17 @@ export const menuAPI = {
 export const reservationAPI = {
   create: (data) => api.post('/reservations', data),
   getAll: (params) => api.get('/reservations', { params }),
+  getMyReservations: () => api.get('/reservations/my-reservations'),
   getById: (id) => api.get(`/reservations/${id}`),
   updateStatus: (id, status) => api.patch(`/reservations/${id}/status`, { status }),
   delete: (id) => api.delete(`/reservations/${id}`),
+};
+
+export const orderAPI = {
+  create: (data) => api.post('/orders', data),
+  getMyOrders: () => api.get('/orders/myorders'),
+  getAll: () => api.get('/orders'),
+  updateStatus: (id, status) => api.patch(`/orders/${id}/status`, { status }),
 };
 
 export const contactAPI = {

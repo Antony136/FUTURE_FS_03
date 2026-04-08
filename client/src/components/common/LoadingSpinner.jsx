@@ -19,9 +19,8 @@ const LoadingSpinner = ({ size = 'md', text = '' }) => {
           height: px,
           borderRadius: '50%',
           border: `${size === 'sm' ? 2 : 3}px solid var(--color-border)`,
-          borderTopColor: 'var(--color-gold-400)',
-          animation: 'spin 0.7s linear infinite',
-        }}
+          borderTopColor: 'var(--color-gold)',
+          animation: 'spin 0.7s linear infinite',        }}
       />
       {text && (
         <p style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem', fontFamily: 'var(--font-body)' }}>

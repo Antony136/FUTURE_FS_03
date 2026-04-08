@@ -19,7 +19,7 @@ const OrderManagement = () => {
       const res = await axios.get('/orders');
       setOrders(res.data.data);
     } catch (err) {
-      toast.error('Failed to sync the order registry.');
+      toast.error('Failed to sync the order registry.', { id: 'orders-fetch-error' });
     } finally {
       setLoading(false);
     }
@@ -32,10 +32,10 @@ const OrderManagement = () => {
   const handleUpdateStatus = async (id, status) => {
     try {
       await axios.patch(`/orders/${id}/status`, { status });
-      toast.success(`Order status advanced to ${status}.`);
+      toast.success(`Order status advanced to ${status}.`, { icon: '✅', id: `order-update-${id}` });
       fetchOrders();
     } catch (err) {
-      toast.error('Failed to update order status.');
+      toast.error('Failed to update order status.', { id: 'order-update-error' });
     }
   };
 
@@ -175,11 +175,22 @@ const OrderManagement = () => {
                          className="form-select" 
                          value={order.status}
                          onChange={(e) => handleUpdateStatus(order._id, e.target.value)}
-                         style={{ fontSize: '0.75rem', fontWeight: 800, height: '40px', paddingRight: '1.5rem', borderRadius: '8px' }}
+                         style={{ 
+                           fontSize: '0.75rem', 
+                           fontWeight: 800, 
+                           height: '42px', 
+                           paddingRight: '2.5rem', 
+                           borderRadius: '10px',
+                           cursor: 'pointer',
+                           background: 'var(--color-bg-base)',
+                           border: '1px solid var(--color-border)',
+                           transition: 'all 0.3s ease'
+                         }}
                       >
                          <option value="pending">Pending</option>
                          <option value="confirmed">Confirm</option>
                          <option value="preparing">Prepare</option>
+                         <option value="out-for-delivery">Out for Delivery</option>
                          <option value="delivered">Deliver</option>
                          <option value="cancelled">Cancel</option>
                       </select>

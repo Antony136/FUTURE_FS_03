@@ -159,9 +159,11 @@ const Navbar = () => {
           {isAuthenticated ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }} className="hidden-mobile">
               <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>{user?.name}</div>
+                <Link to="/account" style={{ fontSize: '0.85rem', fontWeight: 700, textDecoration: 'none', color: 'var(--color-text-primary)' }}>{user?.name}</Link>
                 {(user?.role === 'admin' || user?.role === 'staff') && (
-                  <Link to="/admin" style={{ fontSize: '0.7rem', color: 'var(--color-primary)', textDecoration: 'none', fontWeight: 700 }}>Admin Portal</Link>
+                  <div>
+                    <Link to="/admin" style={{ fontSize: '0.7rem', color: 'var(--color-primary)', textDecoration: 'none', fontWeight: 700 }}>Admin Portal</Link>
+                  </div>
                 )}
               </div>
               <button 
@@ -234,7 +236,10 @@ const Navbar = () => {
               
               <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 {isAuthenticated ? (
-                  <button onClick={logout} className="btn btn-outline" style={{ width: '100%' }}>Logout</button>
+                  <>
+                    <Link to="/account" className="btn btn-outline" style={{ width: '100%' }}>My Account</Link>
+                    <button onClick={logout} className="btn btn-ghost" style={{ width: '100%', border: '1px solid var(--color-border)' }}>Logout</button>
+                  </>
                 ) : (
                   <Link to="/login" className="btn btn-outline" style={{ width: '100%' }}>Sign In</Link>
                 )}

@@ -24,13 +24,16 @@ const Cart = ({ isOpen, onClose }) => {
       const res = await axios.post('/orders', orderData);
       
       if (res.data.success) {
-        toast.success('Reservation & Order Confirmed! See you soon.');
+        toast.success('Reservation & Order Confirmed! See you soon.', {
+          icon: '✅',
+          id: 'checkout-success'
+        });
         clearCart();
         onClose();
         navigate('/');
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to process order.');
+      toast.error(err.response?.data?.message || 'Failed to process order.', { id: 'checkout-error' });
     }
   };
 

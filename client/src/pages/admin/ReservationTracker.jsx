@@ -19,7 +19,7 @@ const ReservationTracker = () => {
       const res = await reservationAPI.getAll();
       setReservations(res.data.data || res.data || []);
     } catch (err) {
-      toast.error('Failed to sync guest arrivals.');
+      toast.error('Failed to sync guest arrivals.', { id: 'reservation-fetch-error' });
     } finally {
       setLoading(false);
     }
@@ -32,10 +32,10 @@ const ReservationTracker = () => {
   const handleUpdateStatus = async (id, status) => {
     try {
       await reservationAPI.updateStatus(id, status);
-      toast.success(`Reservation status marked as ${status}.`);
+      toast.success(`Reservation status marked as ${status}.`, { icon: '✅', id: `res-update-${id}` });
       fetchReservations();
     } catch (err) {
-      toast.error('Failed to update arrival status.');
+      toast.error('Failed to update arrival status.', { id: 'res-update-error' });
     }
   };
 
@@ -43,10 +43,10 @@ const ReservationTracker = () => {
     if (!window.confirm('Permanent deletion from the ledger. Continue?')) return;
     try {
       await reservationAPI.delete(id);
-      toast.success('Ledger entry removed.');
+      toast.success('Ledger entry removed.', { icon: '✅', id: `res-delete-${id}` });
       fetchReservations();
     } catch (err) {
-      toast.error('Deletion failed.');
+      toast.error('Deletion failed.', { id: 'res-delete-error' });
     }
   };
 

@@ -52,3 +52,24 @@ exports.restrictTo = (...roles) => {
     next();
   };
 };
+
+// Optional protection — verify JWT token if it exists
+exports.optionalProtect = async (req, res, next) => {
+  try {
+    let token;
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      token = req.headers.authorization.split(' ')[1];
+    }
+
+    if (!token) return next();
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    if (user && user.isActive) {
+      req.user = user;
+    }
+    next();
+  } catch (error) {
+    next(); // Just proceed without user
+  }
+};
