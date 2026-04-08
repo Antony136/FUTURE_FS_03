@@ -79,7 +79,7 @@ app.use('/api/orders', orderRoutes);
 app.get('/', (req, res) => {
   res.json({
     success: true,
-    message: '🍽️ Savory Skies API is running!',
+    message: '🍽️ Simple Restaurant API is running!',
     version: '1.0.0',
     timestamp: new Date().toISOString(),
   });

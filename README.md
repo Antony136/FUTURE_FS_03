@@ -1,10 +1,10 @@
-# 🍽️ Savory Skies | Premium Restaurant Management System
+# 🍽️ Simple Restaurant | Premium Management System
 
 [![Vercel](https://img.shields.io/badge/Frontend-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com)
 [![Render](https://img.shields.io/badge/Backend-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://render.com)
 [![MERN Stack](https://img.shields.io/badge/Stack-MERN-blue?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/mern-stack)
 
-**Savory Skies** (also known as Simple Restaurant) is a high-end, full-stack MERN application designed for a luxury culinary experience. It features a bespoke design system, a sophisticated administrative hub, and a personalized customer journey.
+**Simple Restaurant** is a high-end, full-stack MERN application designed for a luxury culinary experience. It features a bespoke design system, a sophisticated administrative hub, and a personalized customer journey.
 
 ---
 
@@ -115,4 +115,4 @@ The project employs a **Bordeaux & Gold** color palette, emphasizing "Taste the 
 This project is licensed under the MIT License.
 
 ---
-*Savory Skies — Where technology meets culinary excellence.*
+*Simple Restaurant — Where technology meets culinary excellence.*
