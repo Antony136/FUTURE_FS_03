@@ -70,18 +70,6 @@ const menuItems = [
   },
   // ── Main Course ───────────────────────────────────────────────────────────
   {
-    name: 'Butter Chicken',
-    description: 'Tender chicken in a rich, tomato-cream sauce with aromatic spices. Served with basmati rice.',
-    price: 28.99,
-    category: 'Main Course',
-    image: 'https://images.unsplash.com/photo-1603894584713-f48bfeb550f3?w=800',
-    isVeg: false,
-    isFeatured: true,
-    rating: 4.9,
-    spiceLevel: 'Medium',
-    tags: ['bestseller', 'classic'],
-  },
-  {
     name: 'Truffle Mushroom Risotto',
     description: 'Creamy Arborio rice with wild mushrooms, Parmesan, and a drizzle of black truffle oil.',
     price: 32.99,

@@ -322,6 +322,11 @@ p { color: var(--color-text-secondary); }
   box-shadow: 0 0 0 4px rgba(139, 0, 0, 0.1);
 }
 
+/* Dark mode calendar/clock icon visibility */
+.dark .form-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
 .form-textarea {
   min-height: 120px;
   resize: vertical;

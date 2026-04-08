@@ -61,11 +61,10 @@ const reservationSchema = new mongoose.Schema(
 );
 
 // Auto-generate confirmation code before save
-reservationSchema.pre('save', function (next) {
+reservationSchema.pre('save', async function () {
   if (!this.confirmationCode) {
     this.confirmationCode = 'SS-' + Math.random().toString(36).substring(2, 8).toUpperCase();
   }
-  next();
 });
 
 // Index for date-based queries
