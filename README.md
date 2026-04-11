@@ -114,9 +114,4 @@ npm run dev
 The project employs a **Bordeaux & Gold** color palette, emphasizing "Taste the Atmosphere." It utilizes **Glassmorphism** and a spacing-heavy layout to maintain a clean, professional, and elite aesthetic.
 
 ---
-
-## 📄 License
-This project is licensed under the MIT License.
-
----
 *Simple Restaurant — Where technology meets culinary excellence.*
